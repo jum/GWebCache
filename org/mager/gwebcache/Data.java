@@ -123,7 +123,7 @@ public class Data implements Serializable {
                     if (testURL.indexOf("bazooka") != -1)
                         testURL = testURL + "&net=gnutella2";
                 }
-                testURL = testURL + "&client=jgwc&version=" + GWebCache.getVersion();
+                testURL = testURL + "&client=JGWC&version=" + GWebCache.getVersion();
                 //context.log("verifying: " + testURL);
                 URL url = new URL(testURL);
                 HttpURLConnection urlConn = (HttpURLConnection)url.openConnection();
@@ -138,10 +138,13 @@ public class Data implements Serializable {
                     throw new BadResponseException(urlConn.getResponseCode(),
                                                 urlConn.getResponseMessage());
                 String line;
-                String cacheVersion = RemoteURL.STATE_FAILED + ": undecipherable response";
+                String firstLine = null;
+                String cacheVersion = null;
                 while ((line = in.readLine()) != null) {
                     if (Thread.interrupted())
                         return;
+                    if (firstLine == null && line.trim().length() > 0)
+                        firstLine = line;
                     if (protoVersion == RemoteURL.PROTO_V1) {
                         if (line.length() > 4 && 
                             line.substring(0, 4).equalsIgnoreCase("PONG")) {
@@ -165,6 +168,20 @@ public class Data implements Serializable {
                     }
                 }
                 in.close();
+                if (cacheVersion == null) {
+                    if (firstLine == null)
+                        firstLine = "empty response";
+                    if (firstLine.length() > 40)
+                        firstLine = firstLine.substring(0, 40) + "...";
+                    /*
+                     * Do some quick and dirty HTML escaping on the
+                     * received text.
+                     */
+                    firstLine = firstLine.replaceAll("&", "&amp;");
+                    firstLine = firstLine.replaceAll("<", "&lt;");
+                    firstLine = firstLine.replaceAll(">", "&gt;");
+                    cacheVersion = RemoteURL.STATE_FAILED + ": " + firstLine;
+                }
                 target.setCacheVersion(cacheVersion.trim());
             } catch (Exception ex) {
                 //context.log("verify exception:", ex);
