@@ -108,7 +108,7 @@ public class Stats  implements Serializable {
     public void bumpHour(Date now) {
         long thisHour = now.getTime() / Data.MILLIS_PER_HOUR;
         long thisDay = now.getTime() / Data.MILLIS_PER_DAY;
-        long thisWeek = now.getTime()/ Data.MILLLIS_PER_WEEK;
+        long thisWeek = now.getTime()/ Data.MILLIS_PER_WEEK;
         if (thisDay != lastDay) {
             lastDay = thisDay;
 
