@@ -75,7 +75,7 @@ public class Data implements Serializable {
      */
     private HashMap nets;
     /**
-     * The queue of RemoteURLs currently being verified. This is
+     * The queue of VerifyURLs currently being verified. This is
      * not serialized as it can be reconstructed from the cacheVersion
      * string in each RemoteURL.
      * @see RemoteURL
@@ -160,7 +160,7 @@ public class Data implements Serializable {
      */
     public void urlVerifier(ServletContext context) {
         for (;;) {
-            RemoteURL target = null;
+            VerifyURL vu = null;
             /*
              * Wait until there is anything to verify.
              */
@@ -173,7 +173,7 @@ public class Data implements Serializable {
                         return;
                     }
                 }
-                target = (RemoteURL)verifyList.removeFirst();
+                vu = (VerifyURL)verifyList.removeFirst();
             }
             /*
              * In case we did not wait check if the thread is supposed
@@ -181,6 +181,7 @@ public class Data implements Serializable {
              */
             if (Thread.interrupted())
                 return;
+            RemoteURL target = vu.getRemoteURL();
             target.setCacheVersion(RemoteURL.STATE_CHECKING);
             try {
                 String testURL = target.getRemoteURL();
@@ -193,15 +194,7 @@ public class Data implements Serializable {
                      * would be nice if all scripts did understand the
                      * Jon Atkins extension ping=2.
                      */
-                    testURL = testURL + "?ping=1&get=1";
-                    /*
-                     * Special hack for the bazooka php script - it insists
-                     * on net=gnutella2 in a ping request. Fake this here
-                     * although I think it is not correct to require a
-                     * particular network on a ping.
-                     */
-                    if (testURL.indexOf("bazooka") != -1)
-                        testURL = testURL + "&net=gnutella2";
+                    testURL = testURL + "?ping=1&get=1&net=" + vu.getNetName();
                 }
                 testURL = testURL + "&client=JGWC&version=" + GWebCache.getVersion();
                 //context.log("verifying: " + testURL);
@@ -277,10 +270,11 @@ public class Data implements Serializable {
      * URL verification thread.
      * @param url The RemoteURL to enqueue.
      */
-    public void addUrlForVerification(RemoteURL url) {
+    public void addUrlForVerification(String netName, RemoteURL url) {
         url.setCacheVersion(RemoteURL.STATE_QUEUED);
+        VerifyURL vu = new VerifyURL(url, netName);
         synchronized(verifyList) {
-            verifyList.addLast(url);
+            verifyList.addLast(vu);
             verifyList.notify();
         }
     }
@@ -343,7 +337,7 @@ public class Data implements Serializable {
         if (map.containsKey(remoteURL.getRemoteURL()))
             return;
         map.put(remoteURL.getRemoteURL(), remoteURL);
-        addUrlForVerification(remoteURL);
+        addUrlForVerification(netName, remoteURL);
         Date oldest = remoteURL.getLastUpdated();
         Date now = new Date();
         while (map.size() > MAX_URLS_STORED) {
@@ -478,9 +472,9 @@ public class Data implements Serializable {
                     RemoteURL u = (RemoteURL)map.get(url);
                     String cv = u.getCacheVersion();
                     if (cv.equals(RemoteURL.STATE_QUEUED))
-                        instance.addUrlForVerification(u);
+                        instance.addUrlForVerification(netName, u);
                     if (cv.equals(RemoteURL.STATE_CHECKING))
-                        instance.addUrlForVerification(u);
+                        instance.addUrlForVerification(netName, u);
                 }
             }
         }
