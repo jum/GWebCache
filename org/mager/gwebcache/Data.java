@@ -238,6 +238,14 @@ public class Data implements Serializable {
                         return;
                     if (firstLine == null && line.trim().length() > 0)
                         firstLine = line;
+                    /*
+                     * Check if the text returned contains less than
+                     * chars, surely an indicator that the response is
+                     * HTML infested, for example on a free hosting
+                     * service.
+                     */
+                    if (line.indexOf('<') != -1)
+                        break;
                     if (protoVersion == RemoteURL.PROTO_V1) {
                         if (line.length() > 4 && 
                             line.substring(0, 4).equalsIgnoreCase("PONG")) {
