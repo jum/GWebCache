@@ -23,7 +23,7 @@ public class GWebCache extends HttpServlet {
 	 */
     private transient Thread hourlyWorker;
     /**
-     * The worker thread vor verifying cache URLs.
+     * The worker thread for verifying cache URLs.
      */
     private transient Thread verifierWorker;
 
