@@ -27,10 +27,10 @@ public class GWebCache extends HttpServlet {
      */
     private transient Thread verifierWorker;
 	
-	/**
-	 * The Stats instance to use
-	 */
-	private Stats stats;
+    /**
+     * The Stats instance to use
+     */
+    private Stats stats;
     /**
      * Initialize the servlet by reading the cache data from disk
      * and create the worker threads.
