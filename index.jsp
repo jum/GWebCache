@@ -1,3 +1,4 @@
+<!-- $Id$ -->
 <%@ page import="java.util.*" %>
 <%@ page import="org.mager.gwebcache.*" %>
 <% String version = GWebCache.getVersion(); %>

@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
 
+<!-- $Id$ -->
+
 <project name="GWebCache" default="war">
 
 <property name="DEBUG" value="on"/>  
