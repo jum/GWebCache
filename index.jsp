@@ -13,7 +13,9 @@ GWebCache <%=version%>
 <img src="icon.gif" width="32" height="32">
 GWebCache <%=version%>
 </h1>
-[ <a href="index.jsp">Home</a> | <a href="data.jsp">Data</a> ]
+[ <a href="index.jsp">Home</a> |
+<a href="data.jsp">Data</a> |
+<a href="stats.jsp">Stats</a> ]
 <hr>
 This is a Java servlet based Gnutella web cache. For more
 information see this <a href="http://www.mager.org/GWebCache/">page</a>.
