@@ -227,8 +227,17 @@ public class GWebCache extends HttpServlet {
     }
 
     public ClientVersion clientVersionFromParams(HttpServletRequest request) {
-        return new ClientVersion(request.getParameter("client"),
-            request.getParameter("version"));
+        String client = request.getParameter("client");
+        String version = request.getParameter("version");
+        /*
+         * Hack for the strange way the bazooka php script communicates
+         * its version.
+         */
+        if (client != null && version == null && client.startsWith("TESTBazooka_")) {
+            version = client.substring(12);
+            client = "Bazooka";
+        }
+        return new ClientVersion(client, version);
     }
 
     public static void checkAddress(String remoteIP) throws WebCacheException {
@@ -252,6 +261,6 @@ public class GWebCache extends HttpServlet {
     }
 
     public static String getVersion() {
-        return "0.0.7";
+        return "0.0.8";
     }
 }
