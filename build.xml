@@ -54,4 +54,11 @@
 	</war>
 </target>
 
+<target name="doc" depends="init">
+	<javadoc sourcepath="${basedir}" packagenames="org.mager.*"
+		classpathref="default.classpath"
+		destdir="doc" access="private">
+	</javadoc>
+</target>
+
 </project>
