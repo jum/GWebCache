@@ -258,7 +258,7 @@ Last Cache Start Time: <%=stats.startTime%><br>
 <h3>Page requests</h3><small><a href="#top">top</a></small>
 <table border="1">
 	<tr>
-		<th>Client/version</th>
+		<th></th>
 		<th>This Hour</th>
 		<th>Last Hour</th>
 		<th>This Day</th>
