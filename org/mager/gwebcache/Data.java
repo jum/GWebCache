@@ -11,33 +11,90 @@ import java.io.*;
 import java.net.*;
 import javax.servlet.*;
 
+/**
+ * Encapsulate all permantly stored data about all known
+ * networks. Also contains the code to verify other web
+ * caches and do periodical maintenance. This singleton
+ * is read in upon cache start and written upon cache
+ * shutdown and once per hour.
+ */
 public class Data implements Serializable {
 
+	/**
+	 * The number of milliseconds per hour.
+	 */
     public final static long MILLIS_PER_HOUR = 3600*1000;
+    /**
+     * The time to keep a client IP number in the "hostfile".
+     */
     public final static long MAX_HOST_AGE = 6 * MILLIS_PER_HOUR;
+    /**
+     * The time to keep a cache URL in the "urlfile".
+     */
     public final static long MAX_URL_AGE = 24 * MILLIS_PER_HOUR;
 
+	/**
+	 * The maximum number of client IP numbers in the "hostfile".
+	 */
     public final static int MAX_HOSTS_STORED = 20;
+    /**
+     * The maximum number of cache URLs stored in the "urlfile".
+     */
     public final static int MAX_URLS_STORED = 200;
 
+	/**
+	 * The maximum number of IP numbers returned in a "hostfile"
+	 * request.
+	 */
     public final static int MAX_HOSTS_RETURNED = 20;
+    /**
+     * The maximum number of URLs returned in an "urlfile" request.
+     */
     public final static int MAX_URLS_RETURNED = 10;
 
+	/**
+	 * The only instance of the cache data.
+	 */
     private static Data instance;
-    private HashMap rateLimited; // remoteIP -> Date
-    private HashMap nets; // netName -> GnutellaNet
-    private transient LinkedList verifyList; // of RemoteURLs
+    /**
+     * Map from a String IP number to a Date object. Used to rate
+     * limit updates from clients.
+     */
+    private HashMap rateLimited;
+    /**
+     * Map from a String network name to a GnutellaNet object.
+     */
+    private HashMap nets;
+    /**
+     * The queue of RemoteURLs currently being verified. This is
+     * not serialized as it can be reconstructed from the cacheVersion
+     * string in each RemoteURL.
+     */
+    private transient LinkedList verifyList;
 
+	/**
+	 * Instanciate a new set of cache data. Used only if no
+	 * file to read the data from is found.
+	 */
     private Data() {
         rateLimited = new HashMap();
         nets = new HashMap();
         verifyList = new LinkedList();
     }
 
+	/**
+	 * Retrieve the current cache Data instance.
+	 * @return A Data obejct.
+	 */
     public static Data getInstance() {
         return instance;
     }
 
+	/**
+	 * Perform hourly maintenance on the cache data by deleting
+	 * too old data. Also write the data to disk.
+	 * @param context The ServletContext to use for logging.
+	 */
     public void hourly(ServletContext context) {
         for (;;) {
             try {
@@ -85,9 +142,18 @@ public class Data implements Serializable {
         }
     }
 
+	/**
+	 * Run the queue of RemoteURLs to verify. For each RemoteURL connect
+	 * to the other web cache and use a PING request to extract the caches
+	 * version.
+	 * @param context The ServletContext to use for logging.
+	 */
     public void urlVerifier(ServletContext context) {
         for (;;) {
             RemoteURL target = null;
+            /*
+             * Wait until there is anything to verify.
+             */
             synchronized (verifyList) {
                 while (verifyList.isEmpty()) {
                     try {
@@ -99,6 +165,10 @@ public class Data implements Serializable {
                 }
                 target = (RemoteURL)verifyList.removeFirst();
             }
+            /*
+             * In case we did not wait check if the thread is supposed
+             * to exit.
+             */
             if (Thread.interrupted())
                 return;
             target.setCacheVersion(RemoteURL.STATE_CHECKING);
@@ -160,6 +230,10 @@ public class Data implements Serializable {
                                 cacheVersion = cacheVersion.substring(0, i);
                             break;
                         }
+                        /*
+                         * We expect a V2 pong here, but also accept the V1
+                         * style that some caches use.
+                         */
                         if (line.length() > 4 && 
                             line.substring(0, 4).equalsIgnoreCase("PONG")) {
                             cacheVersion = "V1:" + line.substring(4);
@@ -188,6 +262,11 @@ public class Data implements Serializable {
         }
     }
 
+	/**
+	 * Add a new URL for verification into the queue and awake the
+	 * URL verification thread.
+	 * @param url The RemoteURL to enqueue.
+	 */
     public void addUrlForVerification(RemoteURL url) {
         url.setCacheVersion(RemoteURL.STATE_QUEUED);
         synchronized(verifyList) {
@@ -196,6 +275,12 @@ public class Data implements Serializable {
         }
     }
 
+	/**
+	 * Check if a particular IP number is rate limited (more than
+	 * one update attempt per hour).
+	 * @param remoteIP The IP number as String.
+	 * @return True if the IP is rate limited.
+	 */
     public synchronized boolean isRateLimited(String remoteIP) {
         Date now = new Date();
         Date d = (Date)rateLimited.get(remoteIP);
@@ -205,6 +290,12 @@ public class Data implements Serializable {
         return now.getTime() - d.getTime() <= MILLIS_PER_HOUR;
     }
 
+	/**
+	 * Add a client to the "hostfile". Make sure no more than the max
+	 * number of hosts are stored.
+	 * @param netName The Gnutella network name to add the client to.
+	 * @param remoteClient The RemoteClient describing the client.
+	 */
     public synchronized void addHost(String netName, RemoteClient remoteClient) {
         GnutellaNet net = lookupNet(netName);
         HashMap map = net.getHosts();
@@ -230,6 +321,12 @@ public class Data implements Serializable {
         }
     }
 
+	/**
+	 * Add a cache URL to the "urlfile". Make sure no more than the max
+	 * number of URLs are stored.
+	 * @param netName The Gnutella network name to add the URL to.
+	 * @param remoteURL The RemoteURL describing the URL.
+	 */
     public synchronized void addURL(String netName, RemoteURL remoteURL) {
         GnutellaNet net = lookupNet(netName);
         HashMap map = net.getURLs();
@@ -258,6 +355,12 @@ public class Data implements Serializable {
         }
     }
 
+	/**
+	 * Lookup the GnutellaNet for a network name. Make sure it exists
+	 * if it is not found in the Map.
+	 * @param netName The Gnutella network name to find.
+	 * @return The GnutellaNet describing the network.
+	 */
     public GnutellaNet lookupNet(String netName) {
         GnutellaNet net = (GnutellaNet)nets.get(netName);
         if (net == null) {
@@ -267,6 +370,10 @@ public class Data implements Serializable {
         return net;
     }
 
+	/**
+	 * Iterate over all Gnutella networks. Used mainly by data.jsp.
+	 * @return An Iterator
+	 */
     public Iterator allNets() {
         return nets.keySet().iterator();
     }
@@ -274,7 +381,12 @@ public class Data implements Serializable {
     public HashMap getRateLimited() {
         return rateLimited;
     }
-    
+
+	/**
+	 * Lookup hosts for a "hostfile" request.
+	 * @param netName The Gnutella network name to find hosts in.
+	 * @return A collection of RemoteIP objects.
+	 */    
     public synchronized Collection getHosts(String netName) {
         GnutellaNet net = lookupNet(netName);
         ArrayList res = new ArrayList(MAX_HOSTS_RETURNED);
@@ -291,6 +403,12 @@ public class Data implements Serializable {
         return res;
     }
 
+	/**
+	 * Lookup URLs for an "urlfile" request.
+	 * @param netName The Gnutella network name to find URLs in.
+	 * @param protoVersion The cache protocol version needed.
+	 * @return A Collection of RemoteURL objects.
+	 */
     public synchronized Collection getURLs(String netName, int protoVersion) {
         GnutellaNet net = lookupNet(netName);
         ArrayList res = new ArrayList(MAX_URLS_RETURNED);
@@ -317,6 +435,11 @@ public class Data implements Serializable {
         return res;
     }
 
+	/**
+	 * Read the cache data from disk using serialization. If an
+	 * error occurs, instanciate an empty cache.
+	 * @param context The ServletContext to use for logging.
+	 */
     public static void readData(ServletContext context) {
         Data newData = null;
         try {
@@ -353,6 +476,10 @@ public class Data implements Serializable {
         }
     }
 
+	/**
+	 * Write the cache date to disk using serialization.
+	 * @param context The ServletContext to use for logging.
+	 */
     public static void writeData(ServletContext context) {
         try {
             ObjectOutputStream o = new ObjectOutputStream(
@@ -368,6 +495,14 @@ public class Data implements Serializable {
         }
     }
 
+	/**
+	 * Find the location for the cache data file. If the "filename"
+	 * init parameter is not given, use a file in the servlet container
+	 * provided temporary working directory.
+	 * @param context The ServletContext to use for logging and
+	 * for for extracting runtime arguments.
+	 * @return A File object describing the data file.
+	 */
     public static File dataFile(ServletContext context) {
         File f;
         String fname = context.getInitParameter("filename");

@@ -6,6 +6,11 @@
 
 package org.mager.gwebcache;
 
+/**
+ * The exception thrown if some error occurs during processing
+ * a web cache request. This exception is caught and the message
+ * is displayed to the client. 
+ */
 public class WebCacheException extends Exception {
 
     public WebCacheException(String message) {

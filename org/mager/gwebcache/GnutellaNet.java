@@ -9,11 +9,25 @@ package org.mager.gwebcache;
 import java.util.*;
 import java.io.*;
 
+/**
+ * Encapsulate the data stored per Gnutella network. Implicit in
+ * the V1 protocol is "gnutella". Other arbitrary networks may
+ * be created automatically upon client request.
+ */
 public class GnutellaNet implements Serializable {
 
+	/**
+	 * The name of this network.
+	 */
     private String netName;
-    private HashMap hosts; // ip -> RemoteClient
-    private HashMap urls; // urlstring -> RemoteURL
+    /**
+     * Map from a String IP address to a RemoteClient object.
+     */
+    private HashMap hosts;
+    /**
+     * Map from a String URL to a RemoteURL object.
+     */
+    private HashMap urls;
 
     public GnutellaNet(String netName) {
         this.netName = netName;

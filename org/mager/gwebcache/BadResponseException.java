@@ -6,6 +6,10 @@
 
 package org.mager.gwebcache;
 
+/**
+ * The exception thrown if the received HTTP response code is
+ * not 200 HTTP_OK upon verifying another web cache. 
+ */
 public class BadResponseException extends Exception {
 
     public BadResponseException(int code, String message) {
