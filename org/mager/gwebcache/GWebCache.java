@@ -31,6 +31,7 @@ public class GWebCache extends HttpServlet {
      * The Stats instance to use
      */
     private Stats stats;
+
     /**
      * Initialize the servlet by reading the cache data from disk
      * and create the worker threads.
@@ -42,18 +43,33 @@ public class GWebCache extends HttpServlet {
         Data.readData(context);
         Stats.readStats(context);
         stats = Stats.getInstance();
-        hourlyWorker = new Thread(new Runnable() {
-            public void run() {
-                Data.getInstance().hourly(context);
-            }
-        }, "GWebCache.hourly");
-        hourlyWorker.start();
-        verifierWorker = new Thread(new Runnable() {
-            public void run() {
-                Data.getInstance().urlVerifier(context);
-            }
-        }, "GWebCache.urlVerifier");
-        verifierWorker.start();
+        checkWorkers(context);
+    }
+
+    /*
+     * Check if the worker threads are running and start them if needed.
+     */
+    public void checkWorkers(final ServletContext context) {
+        if (hourlyWorker == null || !hourlyWorker.isAlive()) {
+            if (hourlyWorker != null)
+                log("restarting hourly worker thread");
+            hourlyWorker = new Thread(new Runnable() {
+                public void run() {
+                    Data.getInstance().hourly(context);
+                }
+            }, "GWebCache.hourly");
+            hourlyWorker.start();
+        }
+        if (verifierWorker == null || !verifierWorker.isAlive()) {
+            if (verifierWorker != null)
+                log("restarting verifier worker thread");
+            verifierWorker = new Thread(new Runnable() {
+                public void run() {
+                    Data.getInstance().urlVerifier(context);
+                }
+            }, "GWebCache.urlVerifier");
+            verifierWorker.start();
+        }
     }
 
     /**
@@ -86,6 +102,7 @@ public class GWebCache extends HttpServlet {
     public void doGet(HttpServletRequest request,
                         HttpServletResponse response)
                         throws ServletException, IOException {
+        checkWorkers(getServletContext());
         String pingValue = request.getParameter("ping");
         if (request.getParameter("get") != null ||
             request.getParameter("update") != null ||
