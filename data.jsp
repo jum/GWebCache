@@ -44,7 +44,7 @@ GWebCache <%=version%> Data
 %>
 			<a name="<%=netName%>"></a><small><a href="#top">top</a></small>
 			<h1><%=netName%></h1>
-			<h3>Hosts</h3>
+			<h3>Hosts (<%=map.size()%> Entries)</h3>
 			<table border="1">
 			<th>IP:Port</th>
 			<th>Client</th>
@@ -137,16 +137,17 @@ GWebCache <%=version%> Data
 			</table>
 <%
 		}
+		HashMap map = i.getRateLimited();
 %>
 		</table>
 		<a name="ratelimited"></a>
-		<h2>Rate Limited</h2> <small><a href="#top">top</a></small>
+		<h2>Rate Limited (<%=map.size()%> Entries)</h2>
+		<small><a href="#top">top</a></small>
 		<table border="1">
 		<th>IP</th>
 		<th>Time</th>
 		<th>Client/Version</th>
 <%
-		HashMap map = i.getRateLimited();
 		it = map.keySet().iterator();
 		while (it.hasNext()) {
 			String key = (String)it.next();

@@ -1,6 +1,7 @@
 <!-- $Id$ -->
 <%@ page import="java.util.*" %>
 <%@ page import="org.mager.gwebcache.*" %>
+<%@ page import="java.text.DecimalFormat" %>
 <% String version = GWebCache.getVersion(); %>
 <% Stats stats = Stats.getInstance();%>
 <% stats.numStatsRequests.bumpCount();%>
@@ -33,6 +34,7 @@ Last Cache Start Time: <%=stats.startTime%><br>
 <table border="1">
 	<tr>
 		<th></th>
+		<th></th>
 		<th>This Hour</th>
 		<th>Last Hour</th>
 		<th>This Day</th>
@@ -41,6 +43,7 @@ Last Cache Start Time: <%=stats.startTime%><br>
 	</tr>
 	<%stats.bumpHour(System.currentTimeMillis());%>
 	<tr>
+		<th rowspan="2" valign="top">Global</th>
 		<th>Requests</th>
 		<td><%=stats.numRequests.getThisHourCount()%></td>
 		<td><%=stats.numRequests.getLastHourCount()%></td>
@@ -56,8 +59,9 @@ Last Cache Start Time: <%=stats.startTime%><br>
 		<td><%=stats.numUpdates.getLastDayCount()%></td>
 		<td><%=stats.numUpdates.getTotalCount()%></td>
 	</tr>
-		<tr>
-		<th>urlfile Requests (GWC1)</th>
+	<tr>
+		<th rowspan="7" valign="top">GWC1</th>
+		<th>urlfile Requests</th>
 		<td><%=stats.urlfileRequests.getThisHourCount()%></td>
 		<td><%=stats.urlfileRequests.getLastHourCount()%></td>
 		<td><%=stats.urlfileRequests.getThisDayCount()%></td>
@@ -65,7 +69,7 @@ Last Cache Start Time: <%=stats.startTime%><br>
 		<td><%=stats.urlfileRequests.getTotalCount()%></td>
 	</tr>
 	<tr>
-		<th>hostfile Requests (GWC1)</th>
+		<th>hostfile Requests</th>
 		<td><%=stats.hostfileRequests.getThisHourCount()%></td>
 		<td><%=stats.hostfileRequests.getLastHourCount()%></td>
 		<td><%=stats.hostfileRequests.getThisDayCount()%></td>
@@ -73,7 +77,7 @@ Last Cache Start Time: <%=stats.startTime%><br>
 		<td><%=stats.hostfileRequests.getTotalCount()%></td>
 	</tr>
 	<tr>
-		<th>statfile Requests (GWC1)</th>
+		<th>statfile Requests</th>
 		<td><%=stats.statfileRequests.getThisHourCount()%></td>
 		<td><%=stats.statfileRequests.getLastHourCount()%></td>
 		<td><%=stats.statfileRequests.getThisDayCount()%></td>
@@ -81,7 +85,7 @@ Last Cache Start Time: <%=stats.startTime%><br>
 		<td><%=stats.statfileRequests.getTotalCount()%></td>
 	</tr>
 	<tr>
-		<th>ping Requests (GWC1)</th>
+		<th>ping Requests</th>
 		<td><%=stats.pingRequestsGWC1.getThisHourCount()%></td>
 		<td><%=stats.pingRequestsGWC1.getLastHourCount()%></td>
 		<td><%=stats.pingRequestsGWC1.getThisDayCount()%></td>
@@ -89,7 +93,7 @@ Last Cache Start Time: <%=stats.startTime%><br>
 		<td><%=stats.pingRequestsGWC1.getTotalCount()%></td>
 	</tr>
 	<tr>
-		<th>Updates (GWC1)</th>
+		<th>Updates</th>
 		<td><%=stats.updateRequestsGWC1.getThisHourCount()%></td>
 		<td><%=stats.updateRequestsGWC1.getLastHourCount()%></td>
 		<td><%=stats.updateRequestsGWC1.getThisDayCount()%></td>
@@ -97,7 +101,7 @@ Last Cache Start Time: <%=stats.startTime%><br>
 		<td><%=stats.updateRequestsGWC1.getTotalCount()%></td>
 	</tr>
 	<tr>
-		<th>IP Updates (GWC1)</th>
+		<th>IP Updates</th>
 		<td><%=stats.IPUpdateRequestsGWC1.getThisHourCount()%></td>
 		<td><%=stats.IPUpdateRequestsGWC1.getLastHourCount()%></td>
 		<td><%=stats.IPUpdateRequestsGWC1.getThisDayCount()%></td>
@@ -105,7 +109,7 @@ Last Cache Start Time: <%=stats.startTime%><br>
 		<td><%=stats.IPUpdateRequestsGWC1.getTotalCount()%></td>
 	</tr>
 	<tr>
-		<th>URL Updates (GWC1)</th>
+		<th>URL Updates</th>
 		<td><%=stats.URLUpdateRequestsGWC1.getThisHourCount()%></td>
 		<td><%=stats.URLUpdateRequestsGWC1.getLastHourCount()%></td>
 		<td><%=stats.URLUpdateRequestsGWC1.getThisDayCount()%></td>
@@ -113,7 +117,8 @@ Last Cache Start Time: <%=stats.startTime%><br>
 		<td><%=stats.URLUpdateRequestsGWC1.getTotalCount()%></td>
 	</tr>
 	<tr>
-		<th>get Requests (GWC2)</th>
+		<th rowspan="5" valign="top">GWC2</th>
+		<th>get Requests</th>
 		<td><%=stats.getRequests.getThisHourCount()%></td>
 		<td><%=stats.getRequests.getLastHourCount()%></td>
 		<td><%=stats.getRequests.getThisDayCount()%></td>
@@ -121,7 +126,7 @@ Last Cache Start Time: <%=stats.startTime%><br>
 		<td><%=stats.getRequests.getTotalCount()%></td>
 	</tr>
 	<tr>
-		<th>ping Requests (GWC2)</th>
+		<th>ping Requests</th>
 		<td><%=stats.pingRequestsGWC2.getThisHourCount()%></td>
 		<td><%=stats.pingRequestsGWC2.getLastHourCount()%></td>
 		<td><%=stats.pingRequestsGWC2.getThisDayCount()%></td>
@@ -129,7 +134,7 @@ Last Cache Start Time: <%=stats.startTime%><br>
 		<td><%=stats.pingRequestsGWC2.getTotalCount()%></td>
 	</tr>
 	<tr>
-		<th>Updates (GWC2)</th>
+		<th>Updates</th>
 		<td><%=stats.updateRequestsGWC2.getThisHourCount()%></td>
 		<td><%=stats.updateRequestsGWC2.getLastHourCount()%></td>
 		<td><%=stats.updateRequestsGWC2.getThisDayCount()%></td>
@@ -137,7 +142,7 @@ Last Cache Start Time: <%=stats.startTime%><br>
 		<td><%=stats.updateRequestsGWC2.getTotalCount()%></td>
 	</tr>
 	<tr>
-		<th>IP Updates (GWC2)</th>
+		<th>IP Updates</th>
 		<td><%=stats.IPUpdateRequestsGWC2.getThisHourCount()%></td>
 		<td><%=stats.IPUpdateRequestsGWC2.getLastHourCount()%></td>
 		<td><%=stats.IPUpdateRequestsGWC2.getThisDayCount()%></td>
@@ -145,7 +150,7 @@ Last Cache Start Time: <%=stats.startTime%><br>
 		<td><%=stats.IPUpdateRequestsGWC2.getTotalCount()%></td>
 	</tr>
 	<tr>
-		<th>URL Updates (GWC2)</th>
+		<th>URL Updates</th>
 		<td><%=stats.URLUpdateRequestsGWC2.getThisHourCount()%></td>
 		<td><%=stats.URLUpdateRequestsGWC2.getLastHourCount()%></td>
 		<td><%=stats.URLUpdateRequestsGWC2.getThisDayCount()%></td>
@@ -160,12 +165,17 @@ Last Cache Start Time: <%=stats.startTime%><br>
 	<tr>
 		<th>Client</th>
 		<th>This Hour</th>
+		<th>% This Hour</th>
 		<th>Last Hour</th>
 		<th>This Day</th>
 		<th>Last Day</th>
 		<th>Since Start</th>
+		<th>%Since Start</th>
 	</tr>
 	<%
+		float total = (float)stats.numRequests.getTotalCount();
+		float totalHour = stats.numRequests.getThisHourCount();
+		DecimalFormat df = new DecimalFormat(".##");
 		Iterator it1 = new TreeSet(
 			stats.clientRequests.keySet()).iterator();
 		while (it1.hasNext()) {
@@ -176,14 +186,26 @@ Last Cache Start Time: <%=stats.startTime%><br>
 	<tr>
 		<th><%=client%></th>
 		<td><%=counter.getThisHourCount()%></td>
+		<td><%=df.format(counter.getThisHourCount()*100/totalHour)%></td>
 		<td><%=counter.getLastHourCount()%></td>
 		<td><%=counter.getThisDayCount()%></td>
 		<td><%=counter.getLastDayCount()%></td>
 		<td><%=counter.getTotalCount()%></td>
+		<td><%=df.format(counter.getTotalCount()*100/total)%></td>
 	</tr>
 	<%
 		}
 	%>
+	<tr>
+		<th>Total</th>
+		<td><%=(int)totalHour%></td>
+		<td>100%</td>
+		<td><%=stats.numRequests.getLastHourCount()%></td>
+		<td><%=stats.numRequests.getThisDayCount()%></td>
+		<td><%=stats.numRequests.getLastDayCount()%></td>
+		<td><%=total%></td>
+		<td>100%</td>
+	</tr>
 </table>
 
 <a name="clientversion"></a>
@@ -192,10 +214,12 @@ Last Cache Start Time: <%=stats.startTime%><br>
 	<tr>
 		<th>Client/version</th>
 		<th>This Hour</th>
+		<th>% This Hour</th>
 		<th>Last Hour</th>
 		<th>This Day</th>
 		<th>Last Day</th>
 		<th>Since Start</th>
+		<th>%Since Start</th>
 	</tr>
 	<%
 		it1 = new TreeSet(
@@ -208,15 +232,26 @@ Last Cache Start Time: <%=stats.startTime%><br>
 	<tr>
 		<th><%=client%></th>
 		<td><%=counter.getThisHourCount()%></td>
+		<td><%=df.format(counter.getThisHourCount()*100/totalHour)%></td>
 		<td><%=counter.getLastHourCount()%></td>
 		<td><%=counter.getThisDayCount()%></td>
 		<td><%=counter.getLastDayCount()%></td>
 		<td><%=counter.getTotalCount()%></td>
+		<td><%=df.format(counter.getTotalCount()*100/total)%></td>
 	</tr>
 	<%
 		}
 	%>
-	
+		<tr>
+		<th>Total</th>
+		<td><%=(int)totalHour%></td>
+		<td>100%</td>
+		<td><%=stats.numRequests.getLastHourCount()%></td>
+		<td><%=stats.numRequests.getThisDayCount()%></td>
+		<td><%=stats.numRequests.getLastDayCount()%></td>
+		<td><%=total%></td>
+		<td>100%</td>
+	</tr>
 </table>
 
 <a name="page"></a>
