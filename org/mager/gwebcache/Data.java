@@ -78,7 +78,7 @@ public class Data implements Serializable {
      * The queue of VerifyURLs currently being verified. This is
      * not serialized as it can be reconstructed from the cacheVersion
      * string in each RemoteURL.
-     * @see RemoteURL
+     * @see VerifyURL
      */
     private transient LinkedList verifyList;
 
