@@ -173,9 +173,9 @@ Last Cache Start Time: <%=stats.startTime%><br>
 		<th>%Since Start</th>
 	</tr>
 	<%
-		float total = (float)stats.numRequests.getTotalCount();
-		float totalHour = stats.numRequests.getThisHourCount();
-		DecimalFormat df = new DecimalFormat(".##");
+		long total = stats.numRequests.getTotalCount();
+		long totalHour = stats.numRequests.getThisHourCount();
+		DecimalFormat df = new DecimalFormat("#.##");
 		Iterator it1 = new TreeSet(
 			stats.clientRequests.keySet()).iterator();
 		while (it1.hasNext()) {
@@ -186,12 +186,12 @@ Last Cache Start Time: <%=stats.startTime%><br>
 	<tr>
 		<th><%=client%></th>
 		<td><%=counter.getThisHourCount()%></td>
-		<td><%=df.format(counter.getThisHourCount()*100/totalHour)%></td>
+		<td><%=df.format(counter.getThisHourCount()*100.0/totalHour)%></td>
 		<td><%=counter.getLastHourCount()%></td>
 		<td><%=counter.getThisDayCount()%></td>
 		<td><%=counter.getLastDayCount()%></td>
 		<td><%=counter.getTotalCount()%></td>
-		<td><%=df.format(counter.getTotalCount()*100/total)%></td>
+		<td><%=df.format(counter.getTotalCount()*100.0/total)%></td>
 	</tr>
 	<%
 		}
@@ -232,12 +232,12 @@ Last Cache Start Time: <%=stats.startTime%><br>
 	<tr>
 		<th><%=client%></th>
 		<td><%=counter.getThisHourCount()%></td>
-		<td><%=df.format(counter.getThisHourCount()*100/totalHour)%></td>
+		<td><%=df.format(counter.getThisHourCount()*100.0/totalHour)%></td>
 		<td><%=counter.getLastHourCount()%></td>
 		<td><%=counter.getThisDayCount()%></td>
 		<td><%=counter.getLastDayCount()%></td>
 		<td><%=counter.getTotalCount()%></td>
-		<td><%=df.format(counter.getTotalCount()*100/total)%></td>
+		<td><%=df.format(counter.getTotalCount()*100.0/total)%></td>
 	</tr>
 	<%
 		}
