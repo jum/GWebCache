@@ -22,10 +22,12 @@ public class GnutellaNet implements Serializable {
     private String netName;
     /**
      * Map from a String IP address to a RemoteClient object.
+     * @see RemoteClient
      */
     private HashMap hosts;
     /**
      * Map from a String URL to a RemoteURL object.
+     * @see RemoteURL
      */
     private HashMap urls;
 

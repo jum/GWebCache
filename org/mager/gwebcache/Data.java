@@ -63,12 +63,14 @@ public class Data implements Serializable {
     private HashMap rateLimited;
     /**
      * Map from a String network name to a GnutellaNet object.
+     * @see GnutellaNet
      */
     private HashMap nets;
     /**
      * The queue of RemoteURLs currently being verified. This is
      * not serialized as it can be reconstructed from the cacheVersion
      * string in each RemoteURL.
+     * @see RemoteURL
      */
     private transient LinkedList verifyList;
 
