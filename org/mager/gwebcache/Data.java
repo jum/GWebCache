@@ -115,7 +115,7 @@ public class Data implements Serializable {
                 BufferedReader in = new BufferedReader(new InputStreamReader(
                                                 url.openStream()));
                 String line;
-                String cacheVersion = RemoteURL.STATE_FAILED;
+                String cacheVersion = RemoteURL.STATE_FAILED + ": undecipherable response";
                 while ((line = in.readLine()) != null) {
                     if (Thread.interrupted())
                         return;
@@ -134,13 +134,18 @@ public class Data implements Serializable {
                                 cacheVersion = cacheVersion.substring(0, i);
                             break;
                         }
+                        if (line.length() > 4 && 
+                            line.substring(0, 4).equalsIgnoreCase("PONG")) {
+                            cacheVersion = "V1:" + line.substring(4);
+                            break;
+                        }
                     }
                 }
                 in.close();
                 target.setCacheVersion(cacheVersion.trim());
             } catch (Exception ex) {
                 //context.log("verify exception:", ex);
-                target.setCacheVersion(RemoteURL.STATE_FAILED);
+                target.setCacheVersion(RemoteURL.STATE_FAILED + ": " + ex);
             }
         }
     }
@@ -266,7 +271,7 @@ public class Data implements Serializable {
                 continue;
             if (cacheVersion.equals(RemoteURL.STATE_CHECKING))
                 continue;
-            if (cacheVersion.equals(RemoteURL.STATE_FAILED))
+            if (cacheVersion.startsWith(RemoteURL.STATE_FAILED))
                 continue;
             res.add(url);
             n++;
