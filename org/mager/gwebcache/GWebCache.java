@@ -168,7 +168,7 @@ public class GWebCache extends HttpServlet {
                 while (it.hasNext()) {
                     RemoteClient host = (RemoteClient)it.next();
                     Date d = host.getLastUpdated();
-                    long age = now.getTime() - d.getTime();
+                    long age = (now.getTime() - d.getTime())/1000;
                     out.println("H|" + host.getRemoteIP() + ":" + host.getPort() + "|" + age);
                     didOne = true;
                 }
@@ -176,7 +176,7 @@ public class GWebCache extends HttpServlet {
                 while (it.hasNext()) {
                     RemoteURL url = (RemoteURL)it.next();
                     Date d = url.getLastUpdated();
-                    long age = now.getTime() - d.getTime();
+                    long age = (now.getTime() - d.getTime())/1000;
                     out.println("U|" + url.getRemoteURL() + "|" + age);
                     didOne = true;
                 }
