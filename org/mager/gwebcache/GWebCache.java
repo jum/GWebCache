@@ -134,7 +134,14 @@ public class GWebCache extends HttpServlet {
             if (net == null)
                 net = "gnutella";
             if (request.getParameter("ping") != null) {
-                out.println("I|pong|jumswebcache/" + getVersion());
+                /*
+                 * Hack for bazooka: it insists on the net appended to
+                 * the pong response.
+                 */
+                if (remoteClient.getClientVersion().getClient().indexOf("Bazooka") != -1)
+                    out.println("I|pong|jumswebcache/" + getVersion() + "|" + net);
+                else
+                    out.println("I|pong|jumswebcache/" + getVersion());
                 didOne = true;
             }
             if (request.getParameter("update") != null) {
@@ -245,6 +252,6 @@ public class GWebCache extends HttpServlet {
     }
 
     public static String getVersion() {
-        return "0.0.6";
+        return "0.0.7";
     }
 }

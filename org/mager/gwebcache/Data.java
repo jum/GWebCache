@@ -107,8 +107,22 @@ public class Data implements Serializable {
                 int protoVersion = target.getProtoVersion();
                 if (protoVersion == RemoteURL.PROTO_V1)
                     testURL = testURL + "?ping=1";
-                else
+                else {
+                    /*
+                     * Well, the get=1 parameter forces a V2 query. It
+                     * would be nice if all scripts did understand the
+                     * Jon Atkins extension ping=2.
+                     */
                     testURL = testURL + "?ping=1&get=1";
+                    /*
+                     * Special hack for the bazooka php script - it insists
+                     * on net=gnutella2 in a ping request. Fake this here
+                     * although I think it is not correct to require a
+                     * particular network on a ping.
+                     */
+                    if (testURL.indexOf("bazooka") != -1)
+                        testURL = testURL + "&net=gnutella2";
+                }
                 testURL = testURL + "&client=jgwc&version=" + GWebCache.getVersion();
                 //context.log("verifying: " + testURL);
                 URL url = new URL(testURL);
