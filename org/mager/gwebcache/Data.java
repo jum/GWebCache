@@ -126,8 +126,17 @@ public class Data implements Serializable {
                 testURL = testURL + "&client=jgwc&version=" + GWebCache.getVersion();
                 //context.log("verifying: " + testURL);
                 URL url = new URL(testURL);
+                HttpURLConnection urlConn = (HttpURLConnection)url.openConnection();
+                /*
+                 * Avoid redirects as these point to error pages in most
+                 * of the cases anyways.
+                 */
+                urlConn.setInstanceFollowRedirects(false);
                 BufferedReader in = new BufferedReader(new InputStreamReader(
-                                                url.openStream()));
+                                                urlConn.getInputStream()));
+                if (urlConn.getResponseCode() != HttpURLConnection.HTTP_OK)
+                    throw new BadResponseException(urlConn.getResponseCode(),
+                                                urlConn.getResponseMessage());
                 String line;
                 String cacheVersion = RemoteURL.STATE_FAILED + ": undecipherable response";
                 while ((line = in.readLine()) != null) {
