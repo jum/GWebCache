@@ -248,21 +248,25 @@ public class Data implements Serializable {
                 if (cacheVersion == null) {
                     if (firstLine == null)
                         firstLine = "empty response";
-                    /*
-                     * Do some quick and dirty HTML escaping on the
-                     * received text.
-                     */
-                    firstLine = firstLine.replaceAll("&", "&amp;");
-                    firstLine = firstLine.replaceAll("<", "&lt;");
-                    firstLine = firstLine.replaceAll(">", "&gt;");
                     cacheVersion = RemoteURL.STATE_FAILED + ": " + firstLine;
                 }
-                target.setCacheVersion(cacheVersion.trim());
+                target.setCacheVersion(htmlEscape(cacheVersion.trim()));
             } catch (Exception ex) {
                 //context.log("verify exception:", ex);
                 target.setCacheVersion(RemoteURL.STATE_FAILED + ": " + ex);
             }
         }
+    }
+
+    static String htmlEscape(String html) {
+        /*
+         * Do some quick and dirty HTML escaping on the text
+         * in case it contains HTML.
+         */
+        html = html.replaceAll("&", "&amp;");
+        html = html.replaceAll("<", "&lt;");
+        html = html.replaceAll(">", "&gt;");
+        return html;
     }
 
     /**
