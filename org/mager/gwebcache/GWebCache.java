@@ -132,7 +132,7 @@ public class GWebCache extends HttpServlet {
                 String remoteIP = request.getRemoteAddr();
 				RemoteClient remoteClient = remoteFromParams(request,clientVersion);
                 String c = remoteClient.getClientVersion().getClient();
-                if (c != null && c.equals("GNUT"))
+                if (c.equals("GNUT"))
                     throw new WebCacheException("phatbot not allowd here");
                 String url = request.getParameter("url");
                 out.println("OK");
@@ -180,8 +180,8 @@ public class GWebCache extends HttpServlet {
         try {
             RemoteClient remoteClient = remoteFromParams(request);
             stats.bumpByClient(remoteClient.getClientVersion());
-            if (remoteClient.getClientVersion().getClient() == null ||
-                remoteClient.getClientVersion().getVersion() == null)
+            if (remoteClient.getClientVersion().getClient().equals(ClientVersion.UNKNOWN) ||
+                remoteClient.getClientVersion().getVersion().equals(ClientVersion.UNKNOWN))
                 throw new WebCacheException("no anonymous clients allowed");
             boolean didOne = false;
             String net = request.getParameter("net");

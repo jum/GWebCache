@@ -13,6 +13,7 @@ import java.io.*;
  */
 public class ClientVersion implements Serializable, Comparable {
 
+    public final static String UNKNOWN = "UNKNOWN";
     /**
      * The string identfying a particular client servent.
      * Several cache implementations require this to be a
@@ -25,8 +26,8 @@ public class ClientVersion implements Serializable, Comparable {
     private String version;
 
     public ClientVersion(String client, String version) {
-        this.client = client == null ? "UNKNOWN" : client;
-        this.version = version == null ? "UNKNOWN" : version;
+        this.client = client == null ? UNKNOWN : client;
+        this.version = version == null ? UNKNOWN : version;
     }
 
     public String getClient() {
