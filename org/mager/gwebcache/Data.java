@@ -320,7 +320,9 @@ public class Data implements Serializable {
             ObjectOutputStream o = new ObjectOutputStream(
                                     new FileOutputStream(dataFile(context)));
             synchronized (instance) {
-                o.writeObject(instance);
+                synchronized (instance.verifyList) {
+                    o.writeObject(instance);
+                }
             }
             o.close();
         } catch (Exception e) {
