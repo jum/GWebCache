@@ -113,6 +113,7 @@ public class GWebCache extends HttpServlet {
         try {
             String netName = "gnutella";
             if (request.getParameter("ping") != null) {
+                stats.pingRequestsGWC1.bumpCount();
                 out.println("PONG jumswebcache/" + getVersion());
             } else if (request.getParameter("urlfile") != null) {
             	stats.bumpUrlRequests();
@@ -163,7 +164,7 @@ public class GWebCache extends HttpServlet {
                 out.println(stats.numRequests.getTotalCount());
                 out.println(stats.numRequests.getLastHourCount());
                 out.println(stats.numUpdates.getLastHourCount());
-                out.println(stats.numUpdates);
+                out.println(stats.numUpdates.getTotalCount());
             } else {
                 out.println("ERROR: unknown command");
             }
@@ -194,6 +195,7 @@ public class GWebCache extends HttpServlet {
             if (net == null)
                 net = "gnutella";
             if (request.getParameter("ping") != null) {
+                stats.pingRequestsGWC2.bumpCount();
                 /*
                  * Hack for bazooka: it insists on the net appended to
                  * the pong response.
