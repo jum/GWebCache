@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+
+<project name="GWebCache" default="war">
+
+<property name="DEBUG" value="on"/>  
+<property name="OPTIMIZE" value="off"/>  
+<property name="DEPRECATION" value="on"/>
+
+<path id="default.classpath" >
+	<pathelement location="/Library/Tomcat/common/lib/servlet.jar" />
+</path>
+
+
+<target name="init">
+	<tstamp/>
+</target>
+
+
+<target name="compile" depends="init">
+	<javac srcdir="${basedir}"
+		debug="${DEBUG}"
+		optimize="${OPTIMIZE}"
+		deprecation="${DEPRECATION}">
+		<classpath refid="default.classpath" />
+	</javac>
+</target>
+
+<target name="clean">
+	<delete>
+		<fileset dir="${basedir}" includes="**/*.class"/>
+	</delete>
+</target>
+
+<target name="clobber" depends="clean">
+	<delete file="${ant.project.name}.war"/>
+</target>
+
+<target name="war" depends="compile">
+	<war destfile="${ant.project.name}.war" basedir="${basedir}"
+		webxml="web.xml">
+		<include name="**/*.jsp"/>
+		<include name="**/*.gif"/>
+		<classes dir=".">
+			<include name="**/*.class"/>
+			<exclude name="**/*$$Tester.class"/>
+		</classes>
+	</war>
+</target>
+
+</project>
