@@ -160,6 +160,7 @@ public class Data implements Serializable {
                     }
                 }
                 writeData(context);
+                Stats.writeStats(context);
             } catch (InterruptedException ex) {
                 //context.log("hourly exiting");
                 return;
