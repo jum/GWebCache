@@ -99,6 +99,7 @@ public class GWebCache extends HttpServlet {
                     return;
                 }
                 if (remoteClient.getRemoteIP() != null) {
+                    checkAddress(remoteClient.getRemoteIP());
                     Data.getInstance().addHost(netName, remoteClient);
                 }
                 if (url != null) {
@@ -145,6 +146,7 @@ public class GWebCache extends HttpServlet {
                         out.println("I|update|WARNING|update denied due to rate limit");
                         return;
                     }
+                    checkAddress(remoteClient.getRemoteIP());
                     Data.getInstance().addHost(net, remoteClient);
                     out.println("I|update|OK");
                     didOne = true;
@@ -236,60 +238,6 @@ public class GWebCache extends HttpServlet {
         } catch (UnknownHostException ex) {
             throw new WebCacheException("bad IP: unknown host", ex);
         }
-    }
-
-    public void debug(HttpServletRequest request,
-                        HttpServletResponse response)
-                        throws ServletException, IOException {
-        response.setContentType("text/html");
-        PrintWriter out = response.getWriter();
-        String remoteIP = request.getRemoteAddr();
-        String title = "Reading All Request Parameters";
-        out.println("<HTML><HEAD><TITLE>" + title +
-            "</TITLE></HEAD>\n" +
-            "<BODY BGCOLOR=\"#FDF5E6\">\n" +
-            "<H1 ALIGN=CENTER>" + title + "</H1>\n" +
-            "Remote IP: " + remoteIP + "<br>" +
-            "Info: " + getServletInfo() + "<br>" +
-            "Name: " + getServletName() + "<br>" +
-            "<TABLE BORDER=1>\n" +
-            "<TR BGCOLOR=\"#FFAD00\">\n" +
-            "<TH>Parameter Name<TH>Parameter Value(s)");
-        Enumeration paramNames = request.getParameterNames();
-        while(paramNames.hasMoreElements()) {
-            String paramName = (String)paramNames.nextElement();
-            out.println("<TR><TD>" + paramName + "\n<TD>");
-            String[] paramValues = request.getParameterValues(paramName);
-            if (paramValues.length == 1) {
-                String paramValue = paramValues[0];
-                if (paramValue.length() == 0)
-                    out.print("<I>No Value</I>");
-                else
-                    out.print(paramValue);
-            } else {
-                out.println("<UL>");
-                for(int i=0; i<paramValues.length; i++) {
-                    out.println("<LI>" + paramValues[i]);
-                }
-                out.println("</UL>");
-            }
-        }
-        out.println("</TABLE>\n<P>\n");
-        out.println("<TABLE BORDER=1>\n" +
-            "<TR BGCOLOR=\"#FFAD00\">\n" +
-            "<TH>Attribute Name<TH>Attribute Value");
-        ServletContext context = getServletContext();
-        Enumeration attribNames = context.getAttributeNames();
-        while(attribNames.hasMoreElements()) {
-            String attribName = (String)attribNames.nextElement();
-            out.println("<TR><TD>" + attribName + "\n<TD>");
-            Object value = context.getAttribute(attribName);
-            if (value == null)
-                out.print("<I>null</I>");
-            else
-                out.print(value);
-        }
-        out.println("</TABLE>\n</BODY></HTML>");
     }
 
     public String getServletInfo() {
