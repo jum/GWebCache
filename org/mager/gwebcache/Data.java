@@ -267,7 +267,18 @@ public class Data implements Serializable {
                 target.setCacheVersion(htmlEscape(cacheVersion.trim()));
             } catch (Exception ex) {
                 //context.log("verify exception:", ex);
-                target.setCacheVersion(RemoteURL.STATE_FAILED + ": " + ex);
+                String msg = ex.toString();
+                String[] prefixes = {
+                    "org.mager.gwebcache",
+                    "java.io",
+                    "java.net"
+                };
+                for (int i = 0; i < prefixes.length; i++)
+                    if (msg.startsWith(prefixes[i])) {
+                        msg = msg.substring(prefixes[i].length()+1);
+                        break;
+                    }
+                target.setCacheVersion(RemoteURL.STATE_FAILED + ": " + msg);
             }
             target.setLastChecked(new Date());
         }
