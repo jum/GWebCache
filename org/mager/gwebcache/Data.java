@@ -119,7 +119,7 @@ public class Data implements Serializable {
                     while (it.hasNext()) {
                         String remoteIP = (String)it.next();
                         Date d = (Date)rateLimited.get(remoteIP);
-                        if (d != null && now.getTime() - d.getTime() > MILLIS_PER_HOUR)
+                        if (now.getTime() - d.getTime() > MILLIS_PER_HOUR)
                             it.remove();
                     }
                     it = nets.keySet().iterator();
