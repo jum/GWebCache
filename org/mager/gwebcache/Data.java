@@ -149,6 +149,7 @@ public class Data implements Serializable {
                                  * Re-verify good URLs occasionally.
                                  */
                                 if (!remoteURL.getCacheVersion().startsWith(RemoteURL.STATE_FAILED) &&
+                                    d != null &&
                                     now.getTime() - d.getTime() > MAX_URL_VALID)
                                     addUrlForVerification(netName, remoteURL);
                             }
