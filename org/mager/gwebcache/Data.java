@@ -185,6 +185,10 @@ public class Data implements Serializable {
     public Iterator allNets() {
         return nets.keySet().iterator();
     }
+
+    public HashMap getRateLimited() {
+        return rateLimited;
+    }
     
     public synchronized Collection getHosts(String netName) {
         GnutellaNet net = lookupNet(netName);

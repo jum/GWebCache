@@ -70,6 +70,28 @@ GWebCache <%=version%> Data
 			</table>
 <%
 		}
+%>
+		</table>
+		<h2>Rate Limited</h2>
+		<table border="1">
+		<th>IP</th>
+		<th>Time</th>
+<%
+		HashMap map = i.getRateLimited();
+		it = map.keySet().iterator();
+		while (it.hasNext()) {
+			String key = (String)it.next();
+			Date d = (Date)map.get(key);
+%>
+			<tr>
+			<td><%=key%></td>
+			<td><%=d%></td>
+			</tr>
+<%
+		}
+%>
+		</table>
+<%
 	}
 %>
 <p>
