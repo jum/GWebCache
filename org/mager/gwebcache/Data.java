@@ -259,7 +259,7 @@ public class Data implements Serializable {
         Collections.shuffle(keys);
         Iterator it = keys.iterator();
         int n = 0;
-        while (it.hasNext() && n <= MAX_HOSTS_RETURNED) {
+        while (it.hasNext() && n < MAX_HOSTS_RETURNED) {
             String key = (String)it.next();
             res.add(map.get(key));
             n++;
@@ -275,7 +275,7 @@ public class Data implements Serializable {
         Collections.shuffle(keys);
         Iterator it = keys.iterator();
         int n = 0;
-        while (it.hasNext() && n <= MAX_URLS_RETURNED) {
+        while (it.hasNext() && n < MAX_URLS_RETURNED) {
             String key = (String)it.next();
             RemoteURL url = (RemoteURL)map.get(key);
             if (url.getProtoVersion() != protoVersion)
