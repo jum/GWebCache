@@ -18,7 +18,7 @@ GWebCache <%=version%> Data
 <%
 	Data i = Data.getInstance();
 	synchronized (i) {
-		Iterator it = i.allNets();
+		Iterator it = new TreeSet(i.getNets().keySet()).iterator();
 		while (it.hasNext()) {
 			String netName = (String)it.next();
 			GnutellaNet net = i.lookupNet(netName);

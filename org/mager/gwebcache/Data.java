@@ -379,11 +379,11 @@ public class Data implements Serializable {
     }
 
     /**
-     * Iterate over all Gnutella networks. Used mainly by data.jsp.
-     * @return An Iterator
+     * Get the HashMap of GnutellaNets.
+     * @return A HashMap of GnutellaNet objects.
      */
-    public Iterator allNets() {
-        return nets.keySet().iterator();
+    public HashMap getNets() {
+        return nets;
     }
 
     public HashMap getRateLimited() {
