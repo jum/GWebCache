@@ -20,6 +20,6 @@ GWebCache <%=version%> License
 </pre>
 <hr>
 Current Time: <%=new Date()%><br>
-<address><a href="mailto:jum@anubis.han.de">Jens-Uwe Mager</a>
+<%@ include file="address.html" %>
 </body>
 </html>

@@ -21,6 +21,6 @@ information see this <a href="http://www.mager.org/GWebCache/">page</a>.
 Running on 
 <%=getServletConfig().getServletContext().getServerInfo()%><br>
 Current Time: <%=new Date()%><br>
-<address><a href="mailto:jum@anubis.han.de">Jens-Uwe Mager</a>
+<%@ include file="address.html" %>
 </body>
 </html>
