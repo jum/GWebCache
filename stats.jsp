@@ -69,13 +69,15 @@ Cache Start Time: <%=stats.startTime%><br>
 	</tr>
 
 	<%
-		Iterator it1 = stats.clientRequests.entrySet().iterator();
+		Iterator it1 = new TreeSet(
+			stats.clientRequests.keySet()).iterator();
 		while (it1.hasNext()) {
-			Map.Entry entry = (Map.Entry)it1.next();
-			Counter counter = (Counter)entry.getValue();
+			String client = (String)it1.next();
+			Counter counter =
+				(Counter)stats.clientRequests.get(client);
 	%>
 	<tr>
-		<th><%=entry.getKey()%></th>
+		<th><%=client%></th>
 		<td><%=counter.getThisHourCount()%></td>
 		<td><%=counter.getLastHourCount()%></td>
 		<td><%=counter.getThisDayCount()%></td>
@@ -87,13 +89,15 @@ Cache Start Time: <%=stats.startTime%><br>
 	%>
 
 	<%
-		it1 = stats.clientVersionRequests.entrySet().iterator();
+		it1 = new TreeSet(
+			stats.clientVersionRequests.keySet()).iterator();
 		while (it1.hasNext()) {
-			Map.Entry entry = (Map.Entry)it1.next();
-			Counter counter = (Counter)entry.getValue();
+			ClientVersion client = (ClientVersion)it1.next();
+			Counter counter =
+				(Counter)stats.clientVersionRequests.get(client);
 	%>
 	<tr>
-		<th><%=entry.getKey()%></th>
+		<th><%=client%></th>
 		<td><%=counter.getThisHourCount()%></td>
 		<td><%=counter.getLastHourCount()%></td>
 		<td><%=counter.getThisDayCount()%></td>
