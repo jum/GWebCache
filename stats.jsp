@@ -12,7 +12,6 @@ GWebCache <%=version%> Stats
 </title>
 </head>
 <body bgcolor="white">
-<a name="top"></a>
 <h1>
 <img src="gnutella.gif" width="83" height="103" align="center">
 GWebCache <%=version%> Stats
@@ -160,7 +159,7 @@ Last Cache Start Time: <%=stats.startTime%><br>
 </table>
 
 <a name="client"></a>
-<h3>Requests by client</h3><small><a href="#top">top</a></small>
+<h3>Requests by client</h3><small><a href="#">top</a></small>
 <table border="1">
 	<tr>
 		<th>Client</th>
@@ -209,7 +208,7 @@ Last Cache Start Time: <%=stats.startTime%><br>
 </table>
 
 <a name="clientversion"></a>
-<h3>Requests by client/version</h3><small><a href="#top">top</a></small>
+<h3>Requests by client/version</h3><small><a href="#">top</a></small>
 <table border="1">
 	<tr>
 		<th>Client/version</th>
@@ -255,7 +254,7 @@ Last Cache Start Time: <%=stats.startTime%><br>
 </table>
 
 <a name="page"></a>
-<h3>Page requests</h3><small><a href="#top">top</a></small>
+<h3>Page requests</h3><small><a href="#">top</a></small>
 <table border="1">
 	<tr>
 		<th></th>
