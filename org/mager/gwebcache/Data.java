@@ -279,7 +279,7 @@ public class Data implements Serializable {
         return res;
     }
 
-    public synchronized static void readData(ServletContext context) {
+    public static void readData(ServletContext context) {
         Data newData = null;
         try {
             ObjectInputStream i = new ObjectInputStream(
@@ -295,29 +295,33 @@ public class Data implements Serializable {
         if (newData == null)
             newData = new Data();
         instance = newData;
-        Iterator it = instance.nets.keySet().iterator();
-        while (it.hasNext()) {
-            String netName = (String)it.next();
-            GnutellaNet net = (GnutellaNet)instance.nets.get(netName);
-            HashMap map = net.getURLs();
-            Iterator it1 = map.keySet().iterator();
-            while (it1.hasNext()) {
-                String url = (String)it1.next();
-                RemoteURL u = (RemoteURL)map.get(url);
-                String cv = u.getCacheVersion();
-                if (cv.equals(RemoteURL.STATE_QUEUED))
-                    instance.addUrlForVerification(u);
-                if (cv.equals(RemoteURL.STATE_CHECKING))
-                    instance.addUrlForVerification(u);
+        synchronized (instance) {
+            Iterator it = instance.nets.keySet().iterator();
+            while (it.hasNext()) {
+                String netName = (String)it.next();
+                GnutellaNet net = (GnutellaNet)instance.nets.get(netName);
+                HashMap map = net.getURLs();
+                Iterator it1 = map.keySet().iterator();
+                while (it1.hasNext()) {
+                    String url = (String)it1.next();
+                    RemoteURL u = (RemoteURL)map.get(url);
+                    String cv = u.getCacheVersion();
+                    if (cv.equals(RemoteURL.STATE_QUEUED))
+                        instance.addUrlForVerification(u);
+                    if (cv.equals(RemoteURL.STATE_CHECKING))
+                        instance.addUrlForVerification(u);
+                }
             }
         }
     }
 
-    public synchronized static void writeData(ServletContext context) {
+    public static void writeData(ServletContext context) {
         try {
             ObjectOutputStream o = new ObjectOutputStream(
                                     new FileOutputStream(dataFile(context)));
-            o.writeObject(instance);
+            synchronized (instance) {
+                o.writeObject(instance);
+            }
             o.close();
         } catch (Exception e) {
             context.log("writeData", e);

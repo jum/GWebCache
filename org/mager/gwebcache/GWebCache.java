@@ -245,6 +245,6 @@ public class GWebCache extends HttpServlet {
     }
 
     public static String getVersion() {
-        return "0.0.4";
+        return "0.0.5";
     }
 }
