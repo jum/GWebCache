@@ -170,8 +170,11 @@ public class GWebCache extends HttpServlet {
                     stats.URLUpdateRequestsGWC1.bumpCount();
                     try {
                         url = URLDecoder.decode(url, "ISO-8859-1");
+                        url = canonURI(url);
                     } catch (UnsupportedEncodingException ex) {
                         throw new WebCacheException("bad encoding");
+                    } catch (URISyntaxException ex) {
+                        throw new WebCacheException("bad URI", ex);
                     }
                     RemoteURL remoteURL = new RemoteURL(url, RemoteURL.PROTO_V1, remoteParam.getClientVersion());
                     Data.getInstance().addURL(netName, remoteURL);
@@ -246,8 +249,11 @@ public class GWebCache extends HttpServlet {
                     stats.URLUpdateRequestsGWC2.bumpCount();
                     try {
                         url = URLDecoder.decode(url, "ISO-8859-1");
+                        url = canonURI(url);
                     } catch (UnsupportedEncodingException ex) {
                         throw new WebCacheException("bad encoding");
+                    } catch (URISyntaxException ex) {
+                        throw new WebCacheException("bad URI", ex);
                     }
                     RemoteURL remoteURL = new RemoteURL(url, RemoteURL.PROTO_V2, remoteParam.getClientVersion());
                     Data.getInstance().addURL(net, remoteURL);
@@ -377,11 +383,45 @@ public class GWebCache extends HttpServlet {
         }
     }
 
+    /**
+     * Do canonicalize the URI and ensure that it is suitable as a web
+     * cache URI. Enforce that it is of scheme http, has no
+     * authentication info and no query and fragment parts.
+     * @param spec The incoming URI
+     * @return The URI sanitized for web cache purposes
+     * @throws URISyntaxException
+     */
+    public static String canonURI(String spec) throws URISyntaxException {
+        URI uri = new URI(spec).normalize().parseServerAuthority();
+        String scheme = uri.getScheme();
+        if (!scheme.equals("http"))
+            throw new URISyntaxException(spec, "scheme must be http");
+        String host = uri.getHost();
+        if (host == null)
+            throw new URISyntaxException(spec, "host must be specified");
+        if (host.endsWith("."))
+            host = host.substring(0, host.length()-1);
+        host = host.toLowerCase();
+        int port = uri.getPort();
+        if (port == 80)
+            port = -1;
+        String path = uri.getPath();
+        if (path.length() == 0)
+            path = "/";
+        String query = uri.getQuery();
+        if (query != null)
+            throw new URISyntaxException(spec, "no query allowed");
+        String frag = uri.getFragment();
+        if (frag != null)
+            throw new URISyntaxException(spec, "no fragment allowed");
+        return new URI(scheme, null, host, port, path, null, null).toASCIIString();
+    }
+
     public String getServletInfo() {
         return "GWebCache " + getVersion() + " by Jens-Uwe Mager <jum@anubis.han.de>";
     }
 
     public static String getVersion() {
-        return "0.2.9";
+        return "0.3.0";
     }
 }
