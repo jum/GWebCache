@@ -106,7 +106,7 @@ public class GWebCache extends HttpServlet {
                         throws ServletException, IOException {
         PrintWriter out = response.getWriter();
         stats.bumpHour(System.currentTimeMillis());
-        stats.bumpRequests();
+        stats.numRequests.bumpCount();
         ClientVersion clientVersion = clientVersionFromParams(request);
 		stats.bumpByClient(clientVersion);
 		
@@ -116,14 +116,14 @@ public class GWebCache extends HttpServlet {
                 stats.pingRequestsGWC1.bumpCount();
                 out.println("PONG jumswebcache/" + getVersion());
             } else if (request.getParameter("urlfile") != null) {
-            	stats.bumpUrlRequests();
+            	stats.urlfileRequests.bumpCount();
                 Iterator it = Data.getInstance().getURLs(netName, RemoteURL.PROTO_V1).iterator();
                 while (it.hasNext()) {
                     RemoteURL url = (RemoteURL)it.next();
                     out.println(url.getRemoteURL());
                 }
             } else if (request.getParameter("hostfile") != null) {
-            	stats.bumpHostRequests();
+            	stats.hostfileRequests.bumpCount();
                 Iterator it = Data.getInstance().getHosts(netName).iterator();
                 while (it.hasNext()) {
                     RemoteClient host = (RemoteClient)it.next();
@@ -160,7 +160,7 @@ public class GWebCache extends HttpServlet {
                     Data.getInstance().addURL(netName, remoteURL);
                 }
             } else if (request.getParameter("statfile") != null) {
-                stats.bumpStatRequests();
+                stats.statfileRequests.bumpCount();
                 out.println(stats.numRequests.getTotalCount());
                 out.println(stats.numRequests.getLastHourCount());
                 out.println(stats.numUpdates.getLastHourCount());
@@ -183,7 +183,7 @@ public class GWebCache extends HttpServlet {
         PrintWriter out = response.getWriter();
         Date now = new Date();
         stats.bumpHour(now);
-        stats.bumpRequests();
+        stats.numRequests.bumpCount();
         try {
             RemoteClient remoteParam = remoteFromParams(request);
             stats.bumpByClient(remoteParam.getClientVersion());
@@ -239,7 +239,7 @@ public class GWebCache extends HttpServlet {
                 }
             }
             if (request.getParameter("get") != null) {
-            	stats.bumpGetRequests();
+            	stats.getRequests.bumpCount();
                 Iterator it = Data.getInstance().getHosts(net).iterator();
                 while (it.hasNext()) {
                     RemoteClient host = (RemoteClient)it.next();

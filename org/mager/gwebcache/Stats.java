@@ -265,25 +265,11 @@ public class Stats  implements Serializable {
     }
 
     /**
-     * Increment the number of requests received.
-     */
-    public void bumpRequests() {
-        numRequests.bumpCount();
-    }
-
-    /**
-     * Increment the total number of updates received.
-     */
-    private void bumpUpdates() {
-        numUpdates.bumpCount();
-    }
-
-    /**
      * Increment the number of GWC1 updates received.
      * and total number of updates received.
      */
     public void bumpGWC1Updates() {
-        bumpUpdates();
+        numUpdates.bumpCount();
         updateRequestsGWC1.bumpCount();
     }
 
@@ -292,42 +278,10 @@ public class Stats  implements Serializable {
      * and total number of updates received.
      */
     public void bumpGWC2Updates() {
-        bumpUpdates();
+        numUpdates.bumpCount();
         updateRequestsGWC2.bumpCount();
     }
 
-    /**
-     * Increment the number of urlfile request
-     * This is a GWC1 request
-     */
-    public void bumpUrlRequests(){
-        urlfileRequests.bumpCount();
-    }
-	
-    /**
-     * Increment the number of hostfile request
-     * This is a GWC1 request
-     */
-    public void bumpHostRequests(){
-        hostfileRequests.bumpCount();
-    }
-
-    /**
-     * Increment the number of statfile request
-     * This is a GWC1 request
-     */
-    public void bumpStatRequests(){
-        statfileRequests.bumpCount();
-    }
-
-    /**
-     * Increment the number of get request
-     * This is a GWC2 request
-     */
-    public void bumpGetRequests(){
-        getRequests.bumpCount();
-    }
-	
     /**
      * This bump the client only and client/version count
      * @param c
