@@ -20,10 +20,18 @@ import javax.servlet.*;
  */
 public class Data implements Serializable {
 
-    /**
+	/**
      * The number of milliseconds per hour.
      */
     public final static long MILLIS_PER_HOUR = 3600*1000;
+	/**
+	 * The number of milliseconds per day.
+	 */
+	public final static long MILLIS_PER_DAY = 3600*1000*24;
+	/**
+	 * The number of milliseconds per week.
+	 */
+	public static long MILLLIS_PER_WEEK = 3600*1000*24*7;
     /**
      * The time to keep a client IP number in the "hostfile".
      */

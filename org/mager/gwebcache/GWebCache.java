@@ -26,7 +26,11 @@ public class GWebCache extends HttpServlet {
      * The worker thread for verifying cache URLs.
      */
     private transient Thread verifierWorker;
-
+	
+	/**
+	 * The Stats instance to use
+	 */
+	private Stats stats;
     /**
      * Initialize the servlet by reading the cache data from disk
      * and create the worker threads.
@@ -36,6 +40,8 @@ public class GWebCache extends HttpServlet {
         final ServletContext context = getServletContext();
         //log("init");
         Data.readData(context);
+        //Stats.readStats(context);
+        stats = Stats.getInstance();
         hourlyWorker = new Thread(new Runnable() {
             public void run() {
                 Data.getInstance().hourly(context);
@@ -98,30 +104,33 @@ public class GWebCache extends HttpServlet {
                         HttpServletResponse response)
                         throws ServletException, IOException {
         PrintWriter out = response.getWriter();
-        Date now = new Date();
-        Stats.bumpHour(now);
-        Stats.bumpRequests();
-
+        stats.bumpHour(new Date());
+        stats.bumpRequests();
+        ClientVersion clientVersion = clientVersionFromParams(request);
+		stats.bumpByClient(clientVersion);
+		
         try {
             String netName = "gnutella";
             if (request.getParameter("ping") != null) {
                 out.println("PONG jumswebcache/" + getVersion());
             } else if (request.getParameter("urlfile") != null) {
+            	stats.bumpUrlRequests();
                 Iterator it = Data.getInstance().getURLs(netName, RemoteURL.PROTO_V1).iterator();
                 while (it.hasNext()) {
                     RemoteURL url = (RemoteURL)it.next();
                     out.println(url.getRemoteURL());
                 }
             } else if (request.getParameter("hostfile") != null) {
+            	stats.bumpHostRequests();
                 Iterator it = Data.getInstance().getHosts(netName).iterator();
                 while (it.hasNext()) {
                     RemoteClient host = (RemoteClient)it.next();
                     out.println(host.getRemoteIP() + ":" + host.getPort());
                 }
             } else if (request.getParameter("url") != null || request.getParameter("ip") != null) {
-                Stats.bumpUpdates();
+                stats.bumpUpdates();
                 String remoteIP = request.getRemoteAddr();
-                RemoteClient remoteClient = remoteFromParams(request);
+				RemoteClient remoteClient = remoteFromParams(request,clientVersion);
                 String c = remoteClient.getClientVersion().getClient();
                 if (c != null && c.equals("GNUT"))
                     throw new WebCacheException("phatbot not allowd here");
@@ -145,10 +154,10 @@ public class GWebCache extends HttpServlet {
                     Data.getInstance().addURL(netName, remoteURL);
                 }
             } else if (request.getParameter("statfile") != null) {
-                out.println(Stats.numRequests);
-                out.println(Stats.numRequestsLastHour);
-                out.println(Stats.numUpdatesLastHour);
-                out.println(Stats.numUpdates);
+                out.println(stats.numRequests.getTotalCount());
+                out.println(stats.numRequests.getLastHourCount());
+                out.println(stats.numUpdates.getLastHourCount());
+                out.println(stats.numUpdates);
             } else {
                 out.println("ERROR: unknown command");
             }
@@ -166,10 +175,11 @@ public class GWebCache extends HttpServlet {
                         throws ServletException, IOException {
         PrintWriter out = response.getWriter();
         Date now = new Date();
-        Stats.bumpHour(now);
-        Stats.bumpRequests();
+        stats.bumpHour(now);
+        stats.bumpRequests();
         try {
             RemoteClient remoteClient = remoteFromParams(request);
+            stats.bumpByClient(remoteClient.getClientVersion());
             if (remoteClient.getClientVersion().getClient() == null ||
                 remoteClient.getClientVersion().getVersion() == null)
                 throw new WebCacheException("no anonymous clients allowed");
@@ -189,7 +199,7 @@ public class GWebCache extends HttpServlet {
                 didOne = true;
             }
             if (request.getParameter("update") != null) {
-                Stats.bumpUpdates();
+                stats.bumpUpdates();
                 if (remoteClient.getRemoteIP() != null) {
                     String remoteIP = request.getRemoteAddr();
                     if (!remoteIP.equals(remoteClient.getRemoteIP()))
@@ -217,6 +227,7 @@ public class GWebCache extends HttpServlet {
                 }
             }
             if (request.getParameter("get") != null) {
+            	stats.bumpGetRequests();
                 Iterator it = Data.getInstance().getHosts(net).iterator();
                 while (it.hasNext()) {
                     RemoteClient host = (RemoteClient)it.next();
@@ -241,7 +252,45 @@ public class GWebCache extends HttpServlet {
             //log("doV2", ex);
         }
     }
-
+	/**
+	 * Parse the remote client data from the request, including
+	 * remote IP, port number and client ID and version. 
+	 * @param request The HttpServletRequest to extract the
+	 * parameters from.
+	 * @param A ClientVersion object describing the client
+	 * 				It will be put in the RemoteClient object created
+	 * @return A RemoteClient object describing the client.
+	 * @throws WebCacheException
+	 */
+	public RemoteClient remoteFromParams(
+		HttpServletRequest request,
+		ClientVersion c)
+		throws WebCacheException {
+			String ipPort = request.getParameter("ip");
+			int port = 0;
+			String ip = null;
+			if (ipPort != null) {
+				try {
+					ipPort = URLDecoder.decode(ipPort, "ISO-8859-1");
+				} catch (UnsupportedEncodingException ex) {
+					throw new WebCacheException("bad encoding");
+				}
+				int i;
+				i = ipPort.indexOf(':');
+				if (i == -1)
+					throw new WebCacheException("bad ipPort value: " + ipPort);
+				ip = ipPort.substring(0, i);
+				try {
+					port = Integer.parseInt(ipPort.substring(i+1));
+				} catch (NumberFormatException ex) {
+					throw new WebCacheException("bad port: " +
+						ipPort.substring(i+1), ex);
+				}
+				if (port < 1 || port > 65535)
+					throw new WebCacheException("port out of range: " + port);
+			}
+			return new RemoteClient(ip, port, c);
+	}
     /**
      * Parse the remote client data from the request, including
      * remote IP, port number and client ID and version. 
@@ -252,30 +301,7 @@ public class GWebCache extends HttpServlet {
      */
     public RemoteClient remoteFromParams(HttpServletRequest request)
                                             throws WebCacheException {
-        String ipPort = request.getParameter("ip");
-        int port = 0;
-        String ip = null;
-        if (ipPort != null) {
-            try {
-                ipPort = URLDecoder.decode(ipPort, "ISO-8859-1");
-            } catch (UnsupportedEncodingException ex) {
-                throw new WebCacheException("bad encoding");
-            }
-            int i;
-            i = ipPort.indexOf(':');
-            if (i == -1)
-                throw new WebCacheException("bad ipPort value: " + ipPort);
-            ip = ipPort.substring(0, i);
-            try {
-                port = Integer.parseInt(ipPort.substring(i+1));
-            } catch (NumberFormatException ex) {
-                throw new WebCacheException("bad port: " +
-                    ipPort.substring(i+1), ex);
-            }
-            if (port < 1 || port > 65535)
-                throw new WebCacheException("port out of range: " + port);
-        }
-        return new RemoteClient(ip, port, clientVersionFromParams(request));
+        return remoteFromParams(request, clientVersionFromParams(request));
     }
 
     /**
