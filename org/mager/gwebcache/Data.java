@@ -109,7 +109,7 @@ public class Data implements Serializable {
                     testURL = testURL + "?ping=1";
                 else
                     testURL = testURL + "?ping=1&get=1";
-                testURL = testURL + "&client=jumswebcache&version=" + GWebCache.getVersion();
+                testURL = testURL + "&client=jgwc&version=" + GWebCache.getVersion();
                 //context.log("verifying: " + testURL);
                 URL url = new URL(testURL);
                 BufferedReader in = new BufferedReader(new InputStreamReader(
