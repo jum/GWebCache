@@ -30,7 +30,7 @@ Last Cache Start Time: <%=stats.startTime%><br>
 
 <center><h2>Statistics</h2></center>
 <a name="global"></a>
-<h3>Global Stats</h3><small><a href="#top">top</a></small>
+<h3>Global Stats</h3><small><a href="#">top</a></small>
 <table border="1">
 	<tr>
 		<th></th>

@@ -11,7 +11,7 @@ GWebCache <%=version%> License
 </head>
 <body bgcolor="white">
 <h1>
-<img src="icon.gif" width="32" height="32">
+<img src="gnutella.gif" width="83" height="103" align="center">
 GWebCache <%=version%> License
 </h1>
 <%@ include file="menu.html" %>
