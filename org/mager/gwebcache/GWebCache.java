@@ -17,6 +17,14 @@ public class GWebCache extends HttpServlet {
     private transient Thread hourlyWorker;
     private transient Thread verifierWorker;
 
+    private transient volatile long lastHour;
+    private transient volatile long numRequests;
+    private transient volatile long numUpdates;
+    private transient volatile long numRequestsLastHour;
+    private transient volatile long numRequestsThisHour;
+    private transient volatile long numUpdatesLastHour;
+    private transient volatile long numUpdatesThisHour;
+
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         final ServletContext context = getServletContext();
@@ -70,6 +78,18 @@ public class GWebCache extends HttpServlet {
                         HttpServletResponse response)
                         throws ServletException, IOException {
         PrintWriter out = response.getWriter();
+        Date now = new Date();
+        long thisHour = now.getTime() / Data.MILLIS_PER_HOUR;
+        if (thisHour != lastHour) {
+            lastHour = thisHour;
+            numRequestsLastHour = numRequestsThisHour;
+            numRequestsThisHour = 0;
+            numUpdatesLastHour = numUpdatesThisHour;
+            numUpdatesThisHour = 0;
+        }
+        numRequests++;
+        numRequestsThisHour++;
+
         try {
             String netName = "gnutella";
             if (request.getParameter("ping") != null) {
@@ -87,6 +107,8 @@ public class GWebCache extends HttpServlet {
                     out.println(host.getRemoteIP() + ":" + host.getPort());
                 }
             } else if (request.getParameter("url") != null || request.getParameter("ip") != null) {
+                numUpdates++;
+                numUpdatesThisHour++;
                 String remoteIP = request.getRemoteAddr();
                 RemoteClient remoteClient = remoteFromParams(request);
                 String c = remoteClient.getClientVersion().getClient();
@@ -111,6 +133,11 @@ public class GWebCache extends HttpServlet {
                     RemoteURL remoteURL = new RemoteURL(url, RemoteURL.PROTO_V1, remoteClient.getClientVersion());
                     Data.getInstance().addURL(netName, remoteURL);
                 }
+            } else if (request.getParameter("statfile") != null) {
+                out.println(numRequests);
+                out.println(numRequestsLastHour);
+                out.println(numUpdatesLastHour);
+                out.println(numUpdates);
             } else {
                 out.println("ERROR: unknown command");
             }
@@ -124,6 +151,17 @@ public class GWebCache extends HttpServlet {
                         HttpServletResponse response)
                         throws ServletException, IOException {
         PrintWriter out = response.getWriter();
+        Date now = new Date();
+        long thisHour = now.getTime() / Data.MILLIS_PER_HOUR;
+        if (thisHour != lastHour) {
+            lastHour = thisHour;
+            numRequestsLastHour = numRequestsThisHour;
+            numRequestsThisHour = 0;
+            numUpdatesLastHour = numUpdatesThisHour;
+            numUpdatesThisHour = 0;
+        }
+        numRequests++;
+        numRequestsThisHour++;
         try {
             RemoteClient remoteClient = remoteFromParams(request);
             if (remoteClient.getClientVersion().getClient() == null ||
@@ -145,6 +183,8 @@ public class GWebCache extends HttpServlet {
                 didOne = true;
             }
             if (request.getParameter("update") != null) {
+                numUpdates++;
+                numUpdatesThisHour++;
                 if (remoteClient.getRemoteIP() != null) {
                     String remoteIP = request.getRemoteAddr();
                     if (!remoteIP.equals(remoteClient.getRemoteIP()))
@@ -172,7 +212,6 @@ public class GWebCache extends HttpServlet {
                 }
             }
             if (request.getParameter("get") != null) {
-                Date now = new Date();
                 Iterator it = Data.getInstance().getHosts(net).iterator();
                 while (it.hasNext()) {
                     RemoteClient host = (RemoteClient)it.next();
@@ -261,6 +300,6 @@ public class GWebCache extends HttpServlet {
     }
 
     public static String getVersion() {
-        return "0.0.8";
+        return "0.0.9";
     }
 }
