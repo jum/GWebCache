@@ -69,8 +69,20 @@ GWebCache <%=version%> Data
 			}
 %>
 			</table>
+<%
+			map = net.getURLs();
+			it1 = map.keySet().iterator();
+			int nbGood = 0;
+			while (it1.hasNext()) {
+				RemoteURL url = (RemoteURL)map.get((String)it1.next());
+				String cacheVersion = url.getCacheVersion();
+				if (!cacheVersion.startsWith(RemoteURL.STATE_FAILED)){
+					nbGood++;
+				}
+			}
+%>
 			<a name="<%=netName%>,GoodURL"></a>
-			<h3>Working URLs</h3> <small><a href="#">top</a></small>
+			<h3>Working URLs (<%=nbGood%> Entries)</h3> <small><a href="#">top</a></small>
 			<table border="1">
 			<th>URL</th>
 			<th>Version</th>
@@ -81,7 +93,6 @@ GWebCache <%=version%> Data
 <%
 			map = net.getURLs();
 			it1 = map.keySet().iterator();
-			int nbGood = 0;
 			while (it1.hasNext()) {
 				String key = (String)it1.next();
 				RemoteURL url = (RemoteURL)map.get(key);
@@ -92,7 +103,6 @@ GWebCache <%=version%> Data
 				if (cacheVersion.length() > 80)
 					cacheVersion = cacheVersion.substring(0, 80) + "...";
 				if (!cacheVersion.startsWith(RemoteURL.STATE_FAILED)){
-					nbGood++;
 %>
 					<tr>
 					<td><a href="<%=url.getRemoteURL()%>"><%=urlTitle%></a></td>
@@ -107,9 +117,20 @@ GWebCache <%=version%> Data
 			}
 %>
 			</table>
-			There are <%=nbGood%> good URLs.<br>
+<%
+			map = net.getURLs();
+			it1 = map.keySet().iterator();
+			int nbBad = 0;
+			while (it1.hasNext()) {
+				RemoteURL url = (RemoteURL)map.get((String)it1.next());
+				String cacheVersion = url.getCacheVersion();
+				if (cacheVersion.startsWith(RemoteURL.STATE_FAILED)){
+					nbBad++;
+				}
+			}
+%>
 			<a name="<%=netName%>,BadURL"></a>
-			<h3>Bad URLs</h3> <small><a href="#">top</a></small>
+			<h3>Bad URLs (<%=nbBad%> Entries)</h3> <small><a href="#">top</a></small>
 			<table border="1">
 			<th>URL</th>
 			<th>Version</th>
@@ -117,10 +138,10 @@ GWebCache <%=version%> Data
 			<th>Client</th>
 			<th>Last Updated</th>
 			<th>Last Checked</th>
+
 <%
 			map = net.getURLs();
 			it1 = map.keySet().iterator();
-			int nbBad = 0;
 			while (it1.hasNext()) {
 				String key = (String)it1.next();
 				RemoteURL url = (RemoteURL)map.get(key);
@@ -131,7 +152,6 @@ GWebCache <%=version%> Data
 				if (cacheVersion.length() > 80)
 					cacheVersion = cacheVersion.substring(0, 80) + "...";
 				if (cacheVersion.startsWith(RemoteURL.STATE_FAILED)){
-					nbBad++;
 %>
 					<tr>
 					<td><a href="<%=url.getRemoteURL()%>"><%=urlTitle%></a></td>
@@ -146,7 +166,6 @@ GWebCache <%=version%> Data
 			}
 %>
 			</table>
-		There are <%=nbBad%> bad URLs.<br>
 <%
 		}
 		HashMap map = i.getRateLimited();

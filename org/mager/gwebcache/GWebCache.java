@@ -157,6 +157,7 @@ public class GWebCache extends HttpServlet {
                     throw new WebCacheException("phatbot not allowd here");
                 out.println("OK");
                 if (Data.getInstance().isRateLimited(remote)) {
+                    stats.RateLimitedGWC1.bumpCount();
                     out.println("WARNING: update denied due to rate limit");
                     return;
                 }
@@ -233,6 +234,7 @@ public class GWebCache extends HttpServlet {
                     if (!remoteIP.equals(remoteParam.getRemoteIP()))
                         throw new WebCacheException("rejected IP");
                     if (Data.getInstance().isRateLimited(remote)) {
+                        stats.RateLimitedGWC2.bumpCount();
                         out.println("I|update|WARNING|update denied due to rate limit");
                         return;
                     }
@@ -381,6 +383,6 @@ public class GWebCache extends HttpServlet {
     }
 
     public static String getVersion() {
-        return "0.2.5";
+        return "0.2.6";
     }
 }

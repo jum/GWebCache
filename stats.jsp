@@ -12,6 +12,12 @@ GWebCache <%=version%> Stats
 </title>
 </head>
 <body bgcolor="white">
+<style>
+table td.n
+{
+      text-align: right;
+}</style>
+
 <h1>
 <img src="gnutella.gif" width="83" height="103" align="center">
 GWebCache <%=version%> Stats
@@ -44,117 +50,133 @@ Last Cache Start Time: <%=stats.startTime%><br>
 	<tr>
 		<th rowspan="2" valign="top">Global</th>
 		<th>Requests</th>
-		<td><%=stats.numRequests.getThisHourCount()%></td>
-		<td><%=stats.numRequests.getLastHourCount()%></td>
-		<td><%=stats.numRequests.getThisDayCount()%></td>
-		<td><%=stats.numRequests.getLastDayCount()%></td>
-		<td><%=stats.numRequests.getTotalCount()%></td>
+		<td class=n><%=stats.numRequests.getThisHourCount()%></td>
+		<td class=n><%=stats.numRequests.getLastHourCount()%></td>
+		<td class=n><%=stats.numRequests.getThisDayCount()%></td>
+		<td class=n><%=stats.numRequests.getLastDayCount()%></td>
+		<td class=n><%=stats.numRequests.getTotalCount()%></td>
 	</tr>
 	<tr>
 		<th>Updates</th>
-		<td><%=stats.numUpdates.getThisHourCount()%></td>
-		<td><%=stats.numUpdates.getLastHourCount()%></td>
-		<td><%=stats.numUpdates.getThisDayCount()%></td>
-		<td><%=stats.numUpdates.getLastDayCount()%></td>
-		<td><%=stats.numUpdates.getTotalCount()%></td>
+		<td class=n><%=stats.numUpdates.getThisHourCount()%></td>
+		<td class=n><%=stats.numUpdates.getLastHourCount()%></td>
+		<td class=n><%=stats.numUpdates.getThisDayCount()%></td>
+		<td class=n><%=stats.numUpdates.getLastDayCount()%></td>
+		<td class=n><%=stats.numUpdates.getTotalCount()%></td>
 	</tr>
 	<tr>
-		<th rowspan="7" valign="top">GWC1</th>
+		<th rowspan="8" valign="top">GWC1</th>
 		<th>urlfile Requests</th>
-		<td><%=stats.urlfileRequests.getThisHourCount()%></td>
-		<td><%=stats.urlfileRequests.getLastHourCount()%></td>
-		<td><%=stats.urlfileRequests.getThisDayCount()%></td>
-		<td><%=stats.urlfileRequests.getLastDayCount()%></td>
-		<td><%=stats.urlfileRequests.getTotalCount()%></td>
+		<td class=n><%=stats.urlfileRequests.getThisHourCount()%></td>
+		<td class=n><%=stats.urlfileRequests.getLastHourCount()%></td>
+		<td class=n><%=stats.urlfileRequests.getThisDayCount()%></td>
+		<td class=n><%=stats.urlfileRequests.getLastDayCount()%></td>
+		<td class=n><%=stats.urlfileRequests.getTotalCount()%></td>
 	</tr>
 	<tr>
 		<th>hostfile Requests</th>
-		<td><%=stats.hostfileRequests.getThisHourCount()%></td>
-		<td><%=stats.hostfileRequests.getLastHourCount()%></td>
-		<td><%=stats.hostfileRequests.getThisDayCount()%></td>
-		<td><%=stats.hostfileRequests.getLastDayCount()%></td>
-		<td><%=stats.hostfileRequests.getTotalCount()%></td>
+		<td class=n><%=stats.hostfileRequests.getThisHourCount()%></td>
+		<td class=n><%=stats.hostfileRequests.getLastHourCount()%></td>
+		<td class=n><%=stats.hostfileRequests.getThisDayCount()%></td>
+		<td class=n><%=stats.hostfileRequests.getLastDayCount()%></td>
+		<td class=n><%=stats.hostfileRequests.getTotalCount()%></td>
 	</tr>
 	<tr>
 		<th>statfile Requests</th>
-		<td><%=stats.statfileRequests.getThisHourCount()%></td>
-		<td><%=stats.statfileRequests.getLastHourCount()%></td>
-		<td><%=stats.statfileRequests.getThisDayCount()%></td>
-		<td><%=stats.statfileRequests.getLastDayCount()%></td>
-		<td><%=stats.statfileRequests.getTotalCount()%></td>
+		<td class=n><%=stats.statfileRequests.getThisHourCount()%></td>
+		<td class=n><%=stats.statfileRequests.getLastHourCount()%></td>
+		<td class=n><%=stats.statfileRequests.getThisDayCount()%></td>
+		<td class=n><%=stats.statfileRequests.getLastDayCount()%></td>
+		<td class=n><%=stats.statfileRequests.getTotalCount()%></td>
 	</tr>
 	<tr>
 		<th>ping Requests</th>
-		<td><%=stats.pingRequestsGWC1.getThisHourCount()%></td>
-		<td><%=stats.pingRequestsGWC1.getLastHourCount()%></td>
-		<td><%=stats.pingRequestsGWC1.getThisDayCount()%></td>
-		<td><%=stats.pingRequestsGWC1.getLastDayCount()%></td>
-		<td><%=stats.pingRequestsGWC1.getTotalCount()%></td>
+		<td class=n><%=stats.pingRequestsGWC1.getThisHourCount()%></td>
+		<td class=n><%=stats.pingRequestsGWC1.getLastHourCount()%></td>
+		<td class=n><%=stats.pingRequestsGWC1.getThisDayCount()%></td>
+		<td class=n><%=stats.pingRequestsGWC1.getLastDayCount()%></td>
+		<td class=n><%=stats.pingRequestsGWC1.getTotalCount()%></td>
 	</tr>
 	<tr>
 		<th>Updates</th>
-		<td><%=stats.updateRequestsGWC1.getThisHourCount()%></td>
-		<td><%=stats.updateRequestsGWC1.getLastHourCount()%></td>
-		<td><%=stats.updateRequestsGWC1.getThisDayCount()%></td>
-		<td><%=stats.updateRequestsGWC1.getLastDayCount()%></td>
-		<td><%=stats.updateRequestsGWC1.getTotalCount()%></td>
+		<td class=n><%=stats.updateRequestsGWC1.getThisHourCount()%></td>
+		<td class=n><%=stats.updateRequestsGWC1.getLastHourCount()%></td>
+		<td class=n><%=stats.updateRequestsGWC1.getThisDayCount()%></td>
+		<td class=n><%=stats.updateRequestsGWC1.getLastDayCount()%></td>
+		<td class=n><%=stats.updateRequestsGWC1.getTotalCount()%></td>
 	</tr>
 	<tr>
 		<th>IP Updates</th>
-		<td><%=stats.IPUpdateRequestsGWC1.getThisHourCount()%></td>
-		<td><%=stats.IPUpdateRequestsGWC1.getLastHourCount()%></td>
-		<td><%=stats.IPUpdateRequestsGWC1.getThisDayCount()%></td>
-		<td><%=stats.IPUpdateRequestsGWC1.getLastDayCount()%></td>
-		<td><%=stats.IPUpdateRequestsGWC1.getTotalCount()%></td>
+		<td class=n><%=stats.IPUpdateRequestsGWC1.getThisHourCount()%></td>
+		<td class=n><%=stats.IPUpdateRequestsGWC1.getLastHourCount()%></td>
+		<td class=n><%=stats.IPUpdateRequestsGWC1.getThisDayCount()%></td>
+		<td class=n><%=stats.IPUpdateRequestsGWC1.getLastDayCount()%></td>
+		<td class=n><%=stats.IPUpdateRequestsGWC1.getTotalCount()%></td>
 	</tr>
 	<tr>
 		<th>URL Updates</th>
-		<td><%=stats.URLUpdateRequestsGWC1.getThisHourCount()%></td>
-		<td><%=stats.URLUpdateRequestsGWC1.getLastHourCount()%></td>
-		<td><%=stats.URLUpdateRequestsGWC1.getThisDayCount()%></td>
-		<td><%=stats.URLUpdateRequestsGWC1.getLastDayCount()%></td>
-		<td><%=stats.URLUpdateRequestsGWC1.getTotalCount()%></td>
+		<td class=n><%=stats.URLUpdateRequestsGWC1.getThisHourCount()%></td>
+		<td class=n><%=stats.URLUpdateRequestsGWC1.getLastHourCount()%></td>
+		<td class=n><%=stats.URLUpdateRequestsGWC1.getThisDayCount()%></td>
+		<td class=n><%=stats.URLUpdateRequestsGWC1.getLastDayCount()%></td>
+		<td class=n><%=stats.URLUpdateRequestsGWC1.getTotalCount()%></td>
 	</tr>
 	<tr>
-		<th rowspan="5" valign="top">GWC2</th>
+		<th>Rate Limited</th>
+		<td class=n><%=stats.RateLimitedGWC1.getThisHourCount()%></td>
+		<td class=n><%=stats.RateLimitedGWC1.getLastHourCount()%></td>
+		<td class=n><%=stats.RateLimitedGWC1.getThisDayCount()%></td>
+		<td class=n><%=stats.RateLimitedGWC1.getLastDayCount()%></td>
+		<td class=n><%=stats.RateLimitedGWC1.getTotalCount()%></td>
+	</tr>
+	<tr>
+		<th rowspan="6" valign="top">GWC2</th>
 		<th>get Requests</th>
-		<td><%=stats.getRequests.getThisHourCount()%></td>
-		<td><%=stats.getRequests.getLastHourCount()%></td>
-		<td><%=stats.getRequests.getThisDayCount()%></td>
-		<td><%=stats.getRequests.getLastDayCount()%></td>
-		<td><%=stats.getRequests.getTotalCount()%></td>
+		<td class=n><%=stats.getRequests.getThisHourCount()%></td>
+		<td class=n><%=stats.getRequests.getLastHourCount()%></td>
+		<td class=n><%=stats.getRequests.getThisDayCount()%></td>
+		<td class=n><%=stats.getRequests.getLastDayCount()%></td>
+		<td class=n><%=stats.getRequests.getTotalCount()%></td>
 	</tr>
 	<tr>
 		<th>ping Requests</th>
-		<td><%=stats.pingRequestsGWC2.getThisHourCount()%></td>
-		<td><%=stats.pingRequestsGWC2.getLastHourCount()%></td>
-		<td><%=stats.pingRequestsGWC2.getThisDayCount()%></td>
-		<td><%=stats.pingRequestsGWC2.getLastDayCount()%></td>
-		<td><%=stats.pingRequestsGWC2.getTotalCount()%></td>
+		<td class=n><%=stats.pingRequestsGWC2.getThisHourCount()%></td>
+		<td class=n><%=stats.pingRequestsGWC2.getLastHourCount()%></td>
+		<td class=n><%=stats.pingRequestsGWC2.getThisDayCount()%></td>
+		<td class=n><%=stats.pingRequestsGWC2.getLastDayCount()%></td>
+		<td class=n><%=stats.pingRequestsGWC2.getTotalCount()%></td>
 	</tr>
 	<tr>
 		<th>Updates</th>
-		<td><%=stats.updateRequestsGWC2.getThisHourCount()%></td>
-		<td><%=stats.updateRequestsGWC2.getLastHourCount()%></td>
-		<td><%=stats.updateRequestsGWC2.getThisDayCount()%></td>
-		<td><%=stats.updateRequestsGWC2.getLastDayCount()%></td>
-		<td><%=stats.updateRequestsGWC2.getTotalCount()%></td>
+		<td class=n><%=stats.updateRequestsGWC2.getThisHourCount()%></td>
+		<td class=n><%=stats.updateRequestsGWC2.getLastHourCount()%></td>
+		<td class=n><%=stats.updateRequestsGWC2.getThisDayCount()%></td>
+		<td class=n><%=stats.updateRequestsGWC2.getLastDayCount()%></td>
+		<td class=n><%=stats.updateRequestsGWC2.getTotalCount()%></td>
 	</tr>
 	<tr>
 		<th>IP Updates</th>
-		<td><%=stats.IPUpdateRequestsGWC2.getThisHourCount()%></td>
-		<td><%=stats.IPUpdateRequestsGWC2.getLastHourCount()%></td>
-		<td><%=stats.IPUpdateRequestsGWC2.getThisDayCount()%></td>
-		<td><%=stats.IPUpdateRequestsGWC2.getLastDayCount()%></td>
-		<td><%=stats.IPUpdateRequestsGWC2.getTotalCount()%></td>
+		<td class=n><%=stats.IPUpdateRequestsGWC2.getThisHourCount()%></td>
+		<td class=n><%=stats.IPUpdateRequestsGWC2.getLastHourCount()%></td>
+		<td class=n><%=stats.IPUpdateRequestsGWC2.getThisDayCount()%></td>
+		<td class=n><%=stats.IPUpdateRequestsGWC2.getLastDayCount()%></td>
+		<td class=n><%=stats.IPUpdateRequestsGWC2.getTotalCount()%></td>
 	</tr>
 	<tr>
 		<th>URL Updates</th>
-		<td><%=stats.URLUpdateRequestsGWC2.getThisHourCount()%></td>
-		<td><%=stats.URLUpdateRequestsGWC2.getLastHourCount()%></td>
-		<td><%=stats.URLUpdateRequestsGWC2.getThisDayCount()%></td>
-		<td><%=stats.URLUpdateRequestsGWC2.getLastDayCount()%></td>
-		<td><%=stats.URLUpdateRequestsGWC2.getTotalCount()%></td>
+		<td class=n><%=stats.URLUpdateRequestsGWC2.getThisHourCount()%></td>
+		<td class=n><%=stats.URLUpdateRequestsGWC2.getLastHourCount()%></td>
+		<td class=n><%=stats.URLUpdateRequestsGWC2.getThisDayCount()%></td>
+		<td class=n><%=stats.URLUpdateRequestsGWC2.getLastDayCount()%></td>
+		<td class=n><%=stats.URLUpdateRequestsGWC2.getTotalCount()%></td>
+	</tr>
+	<tr>
+		<th>Rate Limited</th>
+		<td class=n><%=stats.RateLimitedGWC2.getThisHourCount()%></td>
+		<td class=n><%=stats.RateLimitedGWC2.getLastHourCount()%></td>
+		<td class=n><%=stats.RateLimitedGWC2.getThisDayCount()%></td>
+		<td class=n><%=stats.RateLimitedGWC2.getLastDayCount()%></td>
+		<td class=n><%=stats.RateLimitedGWC2.getTotalCount()%></td>
 	</tr>
 </table>
 
@@ -184,26 +206,26 @@ Last Cache Start Time: <%=stats.startTime%><br>
 	%>
 	<tr>
 		<th><%=client%></th>
-		<td><%=counter.getThisHourCount()%></td>
-		<td><%=df.format(counter.getThisHourCount()*100.0/totalHour)%></td>
-		<td><%=counter.getLastHourCount()%></td>
-		<td><%=counter.getThisDayCount()%></td>
-		<td><%=counter.getLastDayCount()%></td>
-		<td><%=counter.getTotalCount()%></td>
-		<td><%=df.format(counter.getTotalCount()*100.0/total)%></td>
+		<td class=n><%=counter.getThisHourCount()%></td>
+		<td class=n><%=df.format(counter.getThisHourCount()*100.0/totalHour)%></td>
+		<td class=n><%=counter.getLastHourCount()%></td>
+		<td class=n><%=counter.getThisDayCount()%></td>
+		<td class=n><%=counter.getLastDayCount()%></td>
+		<td class=n><%=counter.getTotalCount()%></td>
+		<td class=n><%=df.format(counter.getTotalCount()*100.0/total)%></td>
 	</tr>
 	<%
 		}
 	%>
 	<tr>
 		<th>Total</th>
-		<td><%=(int)totalHour%></td>
-		<td>100%</td>
-		<td><%=stats.numRequests.getLastHourCount()%></td>
-		<td><%=stats.numRequests.getThisDayCount()%></td>
-		<td><%=stats.numRequests.getLastDayCount()%></td>
-		<td><%=total%></td>
-		<td>100%</td>
+		<td class=n><%=(int)totalHour%></td>
+		<td class=n>100%</td>
+		<td class=n><%=stats.numRequests.getLastHourCount()%></td>
+		<td class=n><%=stats.numRequests.getThisDayCount()%></td>
+		<td class=n><%=stats.numRequests.getLastDayCount()%></td>
+		<td class=n><%=total%></td>
+		<td class=n>100%</td>
 	</tr>
 </table>
 
@@ -230,26 +252,26 @@ Last Cache Start Time: <%=stats.startTime%><br>
 	%>
 	<tr>
 		<th><%=client%></th>
-		<td><%=counter.getThisHourCount()%></td>
-		<td><%=df.format(counter.getThisHourCount()*100.0/totalHour)%></td>
-		<td><%=counter.getLastHourCount()%></td>
-		<td><%=counter.getThisDayCount()%></td>
-		<td><%=counter.getLastDayCount()%></td>
-		<td><%=counter.getTotalCount()%></td>
-		<td><%=df.format(counter.getTotalCount()*100.0/total)%></td>
+		<td class=n><%=counter.getThisHourCount()%></td>
+		<td class=n><%=df.format(counter.getThisHourCount()*100.0/totalHour)%></td>
+		<td class=n><%=counter.getLastHourCount()%></td>
+		<td class=n><%=counter.getThisDayCount()%></td>
+		<td class=n><%=counter.getLastDayCount()%></td>
+		<td class=n><%=counter.getTotalCount()%></td>
+		<td class=n><%=df.format(counter.getTotalCount()*100.0/total)%></td>
 	</tr>
 	<%
 		}
 	%>
 		<tr>
 		<th>Total</th>
-		<td><%=(int)totalHour%></td>
-		<td>100%</td>
-		<td><%=stats.numRequests.getLastHourCount()%></td>
-		<td><%=stats.numRequests.getThisDayCount()%></td>
-		<td><%=stats.numRequests.getLastDayCount()%></td>
-		<td><%=total%></td>
-		<td>100%</td>
+		<td class=n><%=(int)totalHour%></td>
+		<td class=n>100%</td>
+		<td class=n><%=stats.numRequests.getLastHourCount()%></td>
+		<td class=n><%=stats.numRequests.getThisDayCount()%></td>
+		<td class=n><%=stats.numRequests.getLastDayCount()%></td>
+		<td class=n><%=total%></td>
+		<td class=n>100%</td>
 	</tr>
 </table>
 
@@ -266,35 +288,35 @@ Last Cache Start Time: <%=stats.startTime%><br>
 	</tr>
 	<tr>
 		<th>data.jsp</th>
-		<td><%=stats.numDataRequests.getThisHourCount()%></td>
-		<td><%=stats.numDataRequests.getLastHourCount()%></td>
-		<td><%=stats.numDataRequests.getThisDayCount()%></td>
-		<td><%=stats.numDataRequests.getLastDayCount()%></td>
-		<td><%=stats.numDataRequests.getTotalCount()%></td>
+		<td class=n><%=stats.numDataRequests.getThisHourCount()%></td>
+		<td class=n><%=stats.numDataRequests.getLastHourCount()%></td>
+		<td class=n><%=stats.numDataRequests.getThisDayCount()%></td>
+		<td class=n><%=stats.numDataRequests.getLastDayCount()%></td>
+		<td class=n><%=stats.numDataRequests.getTotalCount()%></td>
 	</tr>	
 	<tr>
 		<th>index.jsp</th>
-		<td><%=stats.numIndexRequests.getThisHourCount()%></td>
-		<td><%=stats.numIndexRequests.getLastHourCount()%></td>
-		<td><%=stats.numIndexRequests.getThisDayCount()%></td>
-		<td><%=stats.numIndexRequests.getLastDayCount()%></td>
-		<td><%=stats.numIndexRequests.getTotalCount()%></td>
+		<td class=n><%=stats.numIndexRequests.getThisHourCount()%></td>
+		<td class=n><%=stats.numIndexRequests.getLastHourCount()%></td>
+		<td class=n><%=stats.numIndexRequests.getThisDayCount()%></td>
+		<td class=n><%=stats.numIndexRequests.getLastDayCount()%></td>
+		<td class=n><%=stats.numIndexRequests.getTotalCount()%></td>
 	</tr>
 	<tr>
 		<th>license.jsp</th>
-		<td><%=stats.numLicenseRequests.getThisHourCount()%></td>
-		<td><%=stats.numLicenseRequests.getLastHourCount()%></td>
-		<td><%=stats.numLicenseRequests.getThisDayCount()%></td>
-		<td><%=stats.numLicenseRequests.getLastDayCount()%></td>
-		<td><%=stats.numLicenseRequests.getTotalCount()%></td>
+		<td class=n><%=stats.numLicenseRequests.getThisHourCount()%></td>
+		<td class=n><%=stats.numLicenseRequests.getLastHourCount()%></td>
+		<td class=n><%=stats.numLicenseRequests.getThisDayCount()%></td>
+		<td class=n><%=stats.numLicenseRequests.getLastDayCount()%></td>
+		<td class=n><%=stats.numLicenseRequests.getTotalCount()%></td>
 	</tr>
 	<tr>
 		<th>stats.jsp</th>
-		<td><%=stats.numStatsRequests.getThisHourCount()%></td>
-		<td><%=stats.numStatsRequests.getLastHourCount()%></td>
-		<td><%=stats.numStatsRequests.getThisDayCount()%></td>
-		<td><%=stats.numStatsRequests.getLastDayCount()%></td>
-		<td><%=stats.numStatsRequests.getTotalCount()%></td>
+		<td class=n><%=stats.numStatsRequests.getThisHourCount()%></td>
+		<td class=n><%=stats.numStatsRequests.getLastHourCount()%></td>
+		<td class=n><%=stats.numStatsRequests.getThisDayCount()%></td>
+		<td class=n><%=stats.numStatsRequests.getLastDayCount()%></td>
+		<td class=n><%=stats.numStatsRequests.getTotalCount()%></td>
 	</tr>
 </table>
 

@@ -95,6 +95,12 @@ public class Stats  implements Serializable {
     public volatile Counter IPUpdateRequestsGWC1;
     
     /**
+     * The number of update rate limited.
+     * This is in the GWC1 protocol
+     */
+    public volatile Counter RateLimitedGWC1;
+    
+    /**
      * The number of get requests received.
      * This is a GWC2 requests for url and host
      */
@@ -123,6 +129,12 @@ public class Stats  implements Serializable {
      * This is a GWC2 update.
      */
     public volatile Counter IPUpdateRequestsGWC2;
+    
+    /**
+     * The number of update rate limited.
+     * This is in the GWC2 protocol
+     */
+    public volatile Counter RateLimitedGWC2;
     /**
      * The number of stats page requests received.
      */
@@ -173,12 +185,14 @@ public class Stats  implements Serializable {
         updateRequestsGWC1 = new Counter();
         URLUpdateRequestsGWC1 = new Counter();
         IPUpdateRequestsGWC1 = new Counter();
-       
+        RateLimitedGWC1 = new Counter();
+        
         getRequests = new Counter();
         pingRequestsGWC2 = new Counter();
         updateRequestsGWC2 = new Counter();
         URLUpdateRequestsGWC2 = new Counter();
         IPUpdateRequestsGWC2 = new Counter();
+        RateLimitedGWC2 = new Counter();
         
         numStatsRequests = new Counter();
         numDataRequests = new Counter();
@@ -244,12 +258,14 @@ public class Stats  implements Serializable {
             updateRequestsGWC1.bumpTime(time);
             URLUpdateRequestsGWC1.bumpTime(time);
             IPUpdateRequestsGWC1.bumpTime(time);
+            RateLimitedGWC1.bumpTime(time);
             //GWC2 requests
             updateRequestsGWC2.bumpTime(time);
             getRequests.bumpTime(time);
             pingRequestsGWC2.bumpTime(time);
             URLUpdateRequestsGWC2.bumpTime(time);
             IPUpdateRequestsGWC2.bumpTime(time);
+            RateLimitedGWC2.bumpTime(time);
             //Page requests
             numStatsRequests.bumpTime(time);
             numDataRequests.bumpTime(time);
