@@ -242,10 +242,14 @@ public class Stats  implements Serializable {
             statfileRequests.bumpTime(time);
             pingRequestsGWC1.bumpTime(time);
             updateRequestsGWC1.bumpTime(time);
+            URLUpdateRequestsGWC1.bumpTime(time);
+            IPUpdateRequestsGWC1.bumpTime(time);
             //GWC2 requests
             updateRequestsGWC2.bumpTime(time);
             getRequests.bumpTime(time);
             pingRequestsGWC2.bumpTime(time);
+            URLUpdateRequestsGWC2.bumpTime(time);
+            IPUpdateRequestsGWC2.bumpTime(time);
             //Page requests
             numStatsRequests.bumpTime(time);
             numDataRequests.bumpTime(time);
