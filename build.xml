@@ -45,6 +45,7 @@
 		<include name="**/*.jsp"/>
 		<include name="**/*.html"/>
 		<include name="**/*.gif"/>
+		<exclude name="doc/**"/>
 		<classes dir=".">
 			<include name="**/*.class"/>
 			<exclude name="**/*$$Tester.class"/>
