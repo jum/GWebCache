@@ -25,8 +25,8 @@ public class ClientVersion implements Serializable {
     private String version;
 
     public ClientVersion(String client, String version) {
-        this.client = client;
-        this.version = version;
+        this.client = client == null ? "UNKNOWN" : client;
+        this.version = version == null ? "UNKNOWN" : version;
     }
 
     public String getClient() {
