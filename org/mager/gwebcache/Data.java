@@ -350,7 +350,7 @@ public class Data implements Serializable {
                 Date d = ((RemoteClient)map.get(key)).getLastUpdated();
                 if (now.getTime() - d.getTime() > MAX_HOST_AGE)
                     it.remove();
-                if (oldest.getTime() > d.getTime()) {
+                if (oldest.getTime() >= d.getTime()) {
                     oldestKey = key;
                     oldest = d;
                 }
@@ -384,7 +384,7 @@ public class Data implements Serializable {
                 Date d = ((RemoteURL)map.get(key)).getLastUpdated();
                 if (now.getTime() - d.getTime() > MAX_URL_AGE)
                     it.remove();
-                if (oldest.getTime() > d.getTime()) {
+                if (oldest.getTime() >= d.getTime()) {
                     oldestKey = key;
                     oldest = d;
                 }
