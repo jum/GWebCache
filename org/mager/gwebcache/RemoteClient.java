@@ -15,9 +15,9 @@ import java.io.*;
  */
 public class RemoteClient implements Serializable {
 
-	/**
-	 * The remote clients IP address as a string.
-	 */
+    /**
+     * The remote clients IP address as a string.
+     */
     private String remoteIP;
     /**
      * The TCP/IP port number used by the client.

@@ -18,19 +18,19 @@ import javax.servlet.http.*;
  */
 public class GWebCache extends HttpServlet {
 
-	/**
-	 * The worker thread for doing hourly data maintenance.
-	 */
+    /**
+     * The worker thread for doing hourly data maintenance.
+     */
     private transient Thread hourlyWorker;
     /**
      * The worker thread for verifying cache URLs.
      */
     private transient Thread verifierWorker;
 
-	/**
-	 * Initialize the servlet by reading the cache data from disk
-	 * and create the worker threads.
-	 */
+    /**
+     * Initialize the servlet by reading the cache data from disk
+     * and create the worker threads.
+     */
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         final ServletContext context = getServletContext();
@@ -50,12 +50,12 @@ public class GWebCache extends HttpServlet {
         verifierWorker.start();
     }
 
-	/**
-	 * Shutdown the servlet, write the current cache data to disk
-	 * and kill the worker threads. In some situations the termination
-	 * of the URL verifier thread may take a long time if currently an
-	 * URL to a non-existant host is being opened.
-	 */
+    /**
+     * Shutdown the servlet, write the current cache data to disk
+     * and kill the worker threads. In some situations the termination
+     * of the URL verifier thread may take a long time if currently an
+     * URL to a non-existant host is being opened.
+     */
     public void destroy() {
         //log("destroy");
         Data.writeData(getServletContext());
@@ -71,11 +71,11 @@ public class GWebCache extends HttpServlet {
         verifierWorker = null;
     }
 
-	/**
-	 * Do implement the HTTP GET method. Check the supplied parameters
-	 * whether the request uses the V1 or V2 cache protocol. If no
-	 * parameters are found, redirect to the index.jsp page.
-	 */
+    /**
+     * Do implement the HTTP GET method. Check the supplied parameters
+     * whether the request uses the V1 or V2 cache protocol. If no
+     * parameters are found, redirect to the index.jsp page.
+     */
     public void doGet(HttpServletRequest request,
                         HttpServletResponse response)
                         throws ServletException, IOException {
@@ -91,9 +91,9 @@ public class GWebCache extends HttpServlet {
             response.sendRedirect("index.jsp");
     }
 
-	/**
-	 * Perform a Gnutella V1 web cache protocol request.
-	 */
+    /**
+     * Perform a Gnutella V1 web cache protocol request.
+     */
     public void doV1(HttpServletRequest request,
                         HttpServletResponse response)
                         throws ServletException, IOException {
@@ -158,9 +158,9 @@ public class GWebCache extends HttpServlet {
         }
     }
 
-	/**
-	 * Perform a Gnutella V2 web cache protocol request.
-	 */
+    /**
+     * Perform a Gnutella V2 web cache protocol request.
+     */
     public void doV2(HttpServletRequest request,
                         HttpServletResponse response)
                         throws ServletException, IOException {
@@ -242,14 +242,14 @@ public class GWebCache extends HttpServlet {
         }
     }
 
-	/**
-	 * Parse the remote client data from the request, including
-	 * remote IP, port number and client ID and version. 
-	 * @param request The HttpServletRequest to extract the
-	 * parameters from.
-	 * @return A RemoteClient object describing the client.
-	 * @throws WebCacheException
-	 */
+    /**
+     * Parse the remote client data from the request, including
+     * remote IP, port number and client ID and version. 
+     * @param request The HttpServletRequest to extract the
+     * parameters from.
+     * @return A RemoteClient object describing the client.
+     * @throws WebCacheException
+     */
     public RemoteClient remoteFromParams(HttpServletRequest request)
                                             throws WebCacheException {
         String ipPort = request.getParameter("ip");
@@ -278,12 +278,12 @@ public class GWebCache extends HttpServlet {
         return new RemoteClient(ip, port, clientVersionFromParams(request));
     }
 
-	/**
-	 * Parse the client ID and version strings from the request.
-	 * @param request The HttpServletRequest to extract the
-	 * parameters from.
-	 * @return A ClientVersion object.
-	 */
+    /**
+     * Parse the client ID and version strings from the request.
+     * @param request The HttpServletRequest to extract the
+     * parameters from.
+     * @return A ClientVersion object.
+     */
     public ClientVersion clientVersionFromParams(HttpServletRequest request) {
         String client = request.getParameter("client");
         String version = request.getParameter("version");
@@ -298,12 +298,12 @@ public class GWebCache extends HttpServlet {
         return new ClientVersion(client, version);
     }
 
-	/**
-	 * Check that a particular IP address is reachable from the world.
-	 * In particular it may not be a local loopback or a private address.
-	 * @param remoteIP
-	 * @throws WebCacheException
-	 */
+    /**
+     * Check that a particular IP address is reachable from the world.
+     * In particular it may not be a local loopback or a private address.
+     * @param remoteIP
+     * @throws WebCacheException
+     */
     public static void checkAddress(String remoteIP) throws WebCacheException {
         try {
             InetAddress addr = InetAddress.getByName(remoteIP);

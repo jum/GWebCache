@@ -16,9 +16,9 @@ import java.io.*;
  */
 public class GnutellaNet implements Serializable {
 
-	/**
-	 * The name of this network.
-	 */
+    /**
+     * The name of this network.
+     */
     private String netName;
     /**
      * Map from a String IP address to a RemoteClient object.

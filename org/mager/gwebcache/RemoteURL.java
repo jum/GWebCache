@@ -14,10 +14,10 @@ import java.io.*;
  */
 public class RemoteURL implements Serializable {
 
-	/**
-	 * The constant stored in cacheVersion while the URL
-	 * is queued for verification.
-	 */
+    /**
+     * The constant stored in cacheVersion while the URL
+     * is queued for verification.
+     */
     public static final String STATE_QUEUED = "QUEUED";
     /**
      * The constant stored in cacheVersion while the URL
@@ -34,15 +34,15 @@ public class RemoteURL implements Serializable {
      * web cache talking the V1 protocol.
      */
     public static final int PROTO_V1 = 1;
-	/**
-	 * The constant stored in protoVersion to signify a
-	 * web cache talking the V2 protocol.
-	 */
+    /**
+     * The constant stored in protoVersion to signify a
+     * web cache talking the V2 protocol.
+     */
     public static final int PROTO_V2 = 2;
 
-	/**
-	 * The URL where to find the web cache,
-	 */
+    /**
+     * The URL where to find the web cache,
+     */
     private String remoteURL;
     /**
      * The version as reported by the pong response. This

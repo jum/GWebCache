@@ -13,11 +13,11 @@ import java.io.*;
  */
 public class ClientVersion implements Serializable {
 
-	/**
-	 * The string identfying a particular client servent.
-	 * Several cache implementations require this to be a
-	 * four character all uppercase string.
-	 */
+    /**
+     * The string identfying a particular client servent.
+     * Several cache implementations require this to be a
+     * four character all uppercase string.
+     */
     private String client;
     /**
      * The string identifying the version of the servent.
