@@ -171,8 +171,6 @@ public class Data implements Serializable {
                 if (cacheVersion == null) {
                     if (firstLine == null)
                         firstLine = "empty response";
-                    if (firstLine.length() > 40)
-                        firstLine = firstLine.substring(0, 40) + "...";
                     /*
                      * Do some quick and dirty HTML escaping on the
                      * received text.
