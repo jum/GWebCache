@@ -12,8 +12,10 @@
 
 	<!--
 	<context-param>
-		<param-name>filename</param-name>
+		<param-name>datafilename</param-name>
 		<param-value>/tmp/gwebcache.data</param-value>
+		<param-name>statsfilename</param-name>
+		<param-value>/tmp/gwebcache.stats</param-value>
 	</context-param>
 	-->
 

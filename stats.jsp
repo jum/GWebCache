@@ -3,6 +3,7 @@
 <%@ page import="org.mager.gwebcache.*" %>
 <% String version = GWebCache.getVersion(); %>
 <% Stats stats = Stats.getInstance();%>
+<% stats.numStatsRequests.bumpCount();%>
 <html>
 <head>
 <title>
@@ -26,7 +27,7 @@ Cache Start Time: <%=stats.startTime%><br>
 		<th>Last Day</th>
 		<th>Since Start</th>
 	</tr>
-	<%stats.bumpHour(new Date());%>
+	<%stats.bumpHour(System.currentTimeMillis());%>
 	<tr>
 		<th>Requests</th>
 		<td><%=stats.numRequests.getThisHourCount()%></td>
@@ -67,7 +68,21 @@ Cache Start Time: <%=stats.startTime%><br>
 		<td><%=stats.getRequests.getLastDayCount()%></td>
 		<td><%=stats.getRequests.getTotalCount()%></td>
 	</tr>
-
+	<tr>
+		<th>GWC1 Updates</th>
+		<td><%=stats.updateRequestsGWC1.getThisHourCount()%></td>
+		<td><%=stats.updateRequestsGWC1.getLastHourCount()%></td>
+		<td><%=stats.updateRequestsGWC1.getThisDayCount()%></td>
+		<td><%=stats.updateRequestsGWC1.getLastDayCount()%></td>
+		<td><%=stats.updateRequestsGWC1.getTotalCount()%></td>
+	</tr>	<tr>
+		<th>GWC2 Updates</th>
+		<td><%=stats.updateRequestsGWC2.getThisHourCount()%></td>
+		<td><%=stats.updateRequestsGWC2.getLastHourCount()%></td>
+		<td><%=stats.updateRequestsGWC2.getThisDayCount()%></td>
+		<td><%=stats.updateRequestsGWC2.getLastDayCount()%></td>
+		<td><%=stats.updateRequestsGWC2.getTotalCount()%></td>
+	</tr>
 	<%
 		Iterator it1 = new TreeSet(
 			stats.clientRequests.keySet()).iterator();

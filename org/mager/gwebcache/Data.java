@@ -511,7 +511,7 @@ public class Data implements Serializable {
     }
 
     /**
-     * Write the cache date to disk using serialization.
+     * Write the cache data to disk using serialization.
      * @param context The ServletContext to use for logging.
      */
     public static void writeData(ServletContext context) {
@@ -539,7 +539,7 @@ public class Data implements Serializable {
      */
     public static File dataFile(ServletContext context) {
         File f;
-        String fname = context.getInitParameter("filename");
+        String fname = context.getInitParameter("datafilename");
         if (fname != null)
             f = new File(fname);
         else {

@@ -40,7 +40,7 @@ public class GWebCache extends HttpServlet {
         final ServletContext context = getServletContext();
         //log("init");
         Data.readData(context);
-        //Stats.readStats(context);
+        Stats.readStats(context);
         stats = Stats.getInstance();
         hourlyWorker = new Thread(new Runnable() {
             public void run() {
@@ -65,6 +65,7 @@ public class GWebCache extends HttpServlet {
     public void destroy() {
         //log("destroy");
         Data.writeData(getServletContext());
+        Stats.writeStats(getServletContext());
         hourlyWorker.interrupt();
         try {
             hourlyWorker.join();
@@ -104,7 +105,7 @@ public class GWebCache extends HttpServlet {
                         HttpServletResponse response)
                         throws ServletException, IOException {
         PrintWriter out = response.getWriter();
-        stats.bumpHour(new Date());
+        stats.bumpHour(System.currentTimeMillis());
         stats.bumpRequests();
         ClientVersion clientVersion = clientVersionFromParams(request);
 		stats.bumpByClient(clientVersion);
@@ -128,7 +129,7 @@ public class GWebCache extends HttpServlet {
                     out.println(host.getRemoteIP() + ":" + host.getPort());
                 }
             } else if (request.getParameter("url") != null || request.getParameter("ip") != null) {
-                stats.bumpUpdates();
+                stats.bumpGWC1Updates();
                 String remoteIP = request.getRemoteAddr();
 				RemoteClient remoteClient = remoteFromParams(request,clientVersion);
                 String c = remoteClient.getClientVersion().getClient();
@@ -199,7 +200,7 @@ public class GWebCache extends HttpServlet {
                 didOne = true;
             }
             if (request.getParameter("update") != null) {
-                stats.bumpUpdates();
+                stats.bumpGWC2Updates();
                 if (remoteClient.getRemoteIP() != null) {
                     String remoteIP = request.getRemoteAddr();
                     if (!remoteIP.equals(remoteClient.getRemoteIP()))
@@ -350,6 +351,6 @@ public class GWebCache extends HttpServlet {
     }
 
     public static String getVersion() {
-        return "0.1.9";
+        return "0.2.0";
     }
 }
