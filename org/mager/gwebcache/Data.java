@@ -78,7 +78,7 @@ public class Data implements Serializable {
                 }
                 writeData(context);
             } catch (InterruptedException ex) {
-                context.log("hourly exiting");
+                //context.log("hourly exiting");
                 return;
             }
         }
@@ -92,7 +92,7 @@ public class Data implements Serializable {
                     try {
                         verifyList.wait();
                     } catch (InterruptedException ex) {
-                        context.log("urlVerifier exiting");
+                        //context.log("urlVerifier exiting");
                         return;
                     }
                 }
@@ -279,7 +279,7 @@ public class Data implements Serializable {
                 (File)context.getAttribute("javax.servlet.context.tempdir");
             f = new File(tmpDir, "gwebcache.data");
         }
-        context.log("datafile=" + f);
+        //context.log("datafile=" + f);
         return f;
     }
 }

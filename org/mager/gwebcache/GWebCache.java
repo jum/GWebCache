@@ -20,7 +20,7 @@ public class GWebCache extends HttpServlet {
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         final ServletContext context = getServletContext();
-        log("init");
+        //log("init");
         Data.readData(context);
         hourlyWorker = new Thread(new Runnable() {
             public void run() {
@@ -37,7 +37,7 @@ public class GWebCache extends HttpServlet {
     }
 
     public void destroy() {
-        log("destroy");
+        //log("destroy");
         Data.writeData(getServletContext());
         hourlyWorker.interrupt();
         try {
@@ -115,7 +115,7 @@ public class GWebCache extends HttpServlet {
             }
         } catch (WebCacheException ex) {
             out.println("ERROR: " + ex.getMessage());
-            log("doV1", ex);
+            //log("doV1", ex);
         }
     }
 
@@ -185,7 +185,7 @@ public class GWebCache extends HttpServlet {
                 out.println("I");
         } catch (WebCacheException ex) {
             out.println("I|update|WARNING|" + ex.getMessage());
-            log("doV2", ex);
+            //log("doV2", ex);
         }
     }
 
