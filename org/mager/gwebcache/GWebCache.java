@@ -259,39 +259,37 @@ public class GWebCache extends HttpServlet {
 	 * @param request The HttpServletRequest to extract the
 	 * parameters from.
 	 * @param c A ClientVersion object describing the client
-	 * 				It will be put in the RemoteClient object created
+	 * 	It will be put in the RemoteClient object created
 	 * @return A RemoteClient object describing the client.
 	 * @throws WebCacheException
 	 */
-	public RemoteClient remoteFromParams(
-		HttpServletRequest request,
-		ClientVersion c)
-		throws WebCacheException {
-			String ipPort = request.getParameter("ip");
-			int port = 0;
-			String ip = null;
-			if (ipPort != null) {
-				try {
-					ipPort = URLDecoder.decode(ipPort, "ISO-8859-1");
-				} catch (UnsupportedEncodingException ex) {
-					throw new WebCacheException("bad encoding");
-				}
-				int i;
-				i = ipPort.indexOf(':');
-				if (i == -1)
-					throw new WebCacheException("bad ipPort value: " + ipPort);
-				ip = ipPort.substring(0, i);
-				try {
-					port = Integer.parseInt(ipPort.substring(i+1));
-				} catch (NumberFormatException ex) {
-					throw new WebCacheException("bad port: " +
-						ipPort.substring(i+1), ex);
-				}
-				if (port < 1 || port > 65535)
-					throw new WebCacheException("port out of range: " + port);
-			}
-			return new RemoteClient(ip, port, c);
-	}
+	public RemoteClient remoteFromParams( HttpServletRequest request,
+                                ClientVersion c) throws WebCacheException {
+            String ipPort = request.getParameter("ip");
+            int port = 0;
+            String ip = null;
+            if (ipPort != null) {
+                try {
+                    ipPort = URLDecoder.decode(ipPort, "ISO-8859-1");
+                } catch (UnsupportedEncodingException ex) {
+                    throw new WebCacheException("bad encoding");
+                }
+                int i;
+                i = ipPort.indexOf(':');
+                if (i == -1)
+                    throw new WebCacheException("bad ipPort value: " + ipPort);
+                ip = ipPort.substring(0, i);
+                try {
+                    port = Integer.parseInt(ipPort.substring(i+1));
+                } catch (NumberFormatException ex) {
+                    throw new WebCacheException("bad port: " +
+                ipPort.substring(i+1), ex);
+            }
+            if (port < 1 || port > 65535)
+                throw new WebCacheException("port out of range: " + port);
+        }
+        return new RemoteClient(ip, port, c);
+    }
     /**
      * Parse the remote client data from the request, including
      * remote IP, port number and client ID and version. 
