@@ -9,7 +9,7 @@
 <property name="DEPRECATION" value="on"/>
 
 <path id="default.classpath" >
-	<pathelement location="/Library/Tomcat/common/lib/servlet.jar" />
+	<fileset dir="lib" includes="*.jar"/>
 </path>
 
 
