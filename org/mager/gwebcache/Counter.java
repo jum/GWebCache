@@ -7,6 +7,9 @@ import java.io.Serializable;
  * This is a counter that allow to record with time
  */
 public class Counter implements Serializable {
+    public static final int HOUR_UPDATE = 1;
+    public static final int DAY_UPDATE = 2;
+    public static final int WEEK_UPDATE = 3;
 
     //They are not always up to date.
     //Use the accessor method to get the real value
@@ -35,10 +38,26 @@ public class Counter implements Serializable {
     public void bumpCount() {
         thisHour++;
     }
+    
+    /**
+     * We bump the HOUR, DAY or WEEK time.
+     * @param time the constant that repensent the time to bump
+     */
+    public void bumpTime(int time){
+        if(time == HOUR_UPDATE)
+            bumpHour();
+        else if(time == DAY_UPDATE)
+            bumpDay();
+        else if(time == WEEK_UPDATE)
+            bumpWeek();
+        else 
+            throw new IllegalArgumentException("the argument of " +
+                "bumpTime must be the constant of HOUR,DAY or WEEK");
+    }
     /**
      * We make the change needed when we change of hour
      */
-    public void bumpHour() {
+    private void bumpHour() {
         int tmp = thisHour;
         thisHour -= tmp;
         lastHour = tmp;
@@ -50,7 +69,7 @@ public class Counter implements Serializable {
      * We make the change for stat when the
      * day change. DON'T CALL bumpHour()
      */
-    public void bumpDay() {
+    private void bumpDay() {
         bumpHour();
         int tmp = thisDay;
         thisDay -= tmp;
@@ -61,7 +80,7 @@ public class Counter implements Serializable {
      * day change. DON'T CALL bumpHour()
      * or bumpDay()
      */
-    public void bumpWeek() {
+    private void bumpWeek() {
         bumpHour();
         bumpDay();
         int tmp = thisWeek;

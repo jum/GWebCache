@@ -11,15 +11,25 @@ GWebCache <%=version%> Stats
 </title>
 </head>
 <body bgcolor="white">
+<a name="top"></a>
 <h1>
 <img src="icon.gif" width="32" height="32">
 GWebCache <%=version%> Stats
 </h1>
 <%@ include file="menu.html" %>
+<ul>
+   <li><a href="#global">Global GWebCache statistics</a></li>
+   <li><a href="#client">GWebCache statistics by client</a></li>
+   <li><a href="#clientversion">GWebCache statistics by client/version</a></li>
+   <li><a href="#page">HTML page served statistics</a></li>
+</ul>
 <hr>
-Cache Start Time: <%=stats.startTime%><br>
+Stat Start Time: <%=stats.statsStartTime%><br>
+Last Cache Start Time: <%=stats.startTime%><br>
+
 <center><h2>Statistics</h2></center>
-<h3>Global Stats</h3>
+<a name="global"></a>
+<h3>Global Stats</h3><small><a href="#top">top</a></small>
 <table border="1">
 	<tr>
 		<th></th>
@@ -47,20 +57,60 @@ Cache Start Time: <%=stats.startTime%><br>
 		<td><%=stats.numUpdates.getTotalCount()%></td>
 	</tr>
 		<tr>
-		<th>url Requests (GWC1)</th>
-		<td><%=stats.urlRequests.getThisHourCount()%></td>
-		<td><%=stats.urlRequests.getLastHourCount()%></td>
-		<td><%=stats.urlRequests.getThisDayCount()%></td>
-		<td><%=stats.urlRequests.getLastDayCount()%></td>
-		<td><%=stats.urlRequests.getTotalCount()%></td>
+		<th>urlfile Requests (GWC1)</th>
+		<td><%=stats.urlfileRequests.getThisHourCount()%></td>
+		<td><%=stats.urlfileRequests.getLastHourCount()%></td>
+		<td><%=stats.urlfileRequests.getThisDayCount()%></td>
+		<td><%=stats.urlfileRequests.getLastDayCount()%></td>
+		<td><%=stats.urlfileRequests.getTotalCount()%></td>
 	</tr>
 	<tr>
-		<th>host Requests (GWC1)</th>
-		<td><%=stats.hostRequests.getThisHourCount()%></td>
-		<td><%=stats.hostRequests.getLastHourCount()%></td>
-		<td><%=stats.hostRequests.getThisDayCount()%></td>
-		<td><%=stats.hostRequests.getLastDayCount()%></td>
-		<td><%=stats.hostRequests.getTotalCount()%></td>
+		<th>hostfile Requests (GWC1)</th>
+		<td><%=stats.hostfileRequests.getThisHourCount()%></td>
+		<td><%=stats.hostfileRequests.getLastHourCount()%></td>
+		<td><%=stats.hostfileRequests.getThisDayCount()%></td>
+		<td><%=stats.hostfileRequests.getLastDayCount()%></td>
+		<td><%=stats.hostfileRequests.getTotalCount()%></td>
+	</tr>
+	<tr>
+		<th>statfile Requests (GWC1)</th>
+		<td><%=stats.statfileRequests.getThisHourCount()%></td>
+		<td><%=stats.statfileRequests.getLastHourCount()%></td>
+		<td><%=stats.statfileRequests.getThisDayCount()%></td>
+		<td><%=stats.statfileRequests.getLastDayCount()%></td>
+		<td><%=stats.statfileRequests.getTotalCount()%></td>
+	</tr>
+	<tr>
+		<th>ping Requests (GWC1)</th>
+		<td><%=stats.pingRequestsGWC1.getThisHourCount()%></td>
+		<td><%=stats.pingRequestsGWC1.getLastHourCount()%></td>
+		<td><%=stats.pingRequestsGWC1.getThisDayCount()%></td>
+		<td><%=stats.pingRequestsGWC1.getLastDayCount()%></td>
+		<td><%=stats.pingRequestsGWC1.getTotalCount()%></td>
+	</tr>
+	<tr>
+		<th>Updates (GWC1)</th>
+		<td><%=stats.updateRequestsGWC1.getThisHourCount()%></td>
+		<td><%=stats.updateRequestsGWC1.getLastHourCount()%></td>
+		<td><%=stats.updateRequestsGWC1.getThisDayCount()%></td>
+		<td><%=stats.updateRequestsGWC1.getLastDayCount()%></td>
+		<td><%=stats.updateRequestsGWC1.getTotalCount()%></td>
+	</tr>
+	<tr>
+		<th>IP Updates (GWC1)</th>
+		<td><%=stats.IPUpdateRequestsGWC1.getThisHourCount()%></td>
+		<td><%=stats.IPUpdateRequestsGWC1.getLastHourCount()%></td>
+		<td><%=stats.IPUpdateRequestsGWC1.getThisDayCount()%></td>
+		<td><%=stats.IPUpdateRequestsGWC1.getLastDayCount()%></td>
+		<td><%=stats.IPUpdateRequestsGWC1.getTotalCount()%></td>
+	</tr>
+	<tr>
+		<th>URL Updates (GWC1)</th>
+		<td><%=stats.URLUpdateRequestsGWC1.getThisHourCount()%></td>
+		<td><%=stats.URLUpdateRequestsGWC1.getLastHourCount()%></td>
+		<td><%=stats.URLUpdateRequestsGWC1.getThisDayCount()%></td>
+		<td><%=stats.URLUpdateRequestsGWC1.getLastDayCount()%></td>
+		<td><%=stats.URLUpdateRequestsGWC1.getTotalCount()%></td>
 	</tr>
 	<tr>
 		<th>get Requests (GWC2)</th>
@@ -71,22 +121,41 @@ Cache Start Time: <%=stats.startTime%><br>
 		<td><%=stats.getRequests.getTotalCount()%></td>
 	</tr>
 	<tr>
-		<th>GWC1 Updates</th>
-		<td><%=stats.updateRequestsGWC1.getThisHourCount()%></td>
-		<td><%=stats.updateRequestsGWC1.getLastHourCount()%></td>
-		<td><%=stats.updateRequestsGWC1.getThisDayCount()%></td>
-		<td><%=stats.updateRequestsGWC1.getLastDayCount()%></td>
-		<td><%=stats.updateRequestsGWC1.getTotalCount()%></td>
-	</tr>	<tr>
-		<th>GWC2 Updates</th>
+		<th>ping Requests (GWC2)</th>
+		<td><%=stats.pingRequestsGWC2.getThisHourCount()%></td>
+		<td><%=stats.pingRequestsGWC2.getLastHourCount()%></td>
+		<td><%=stats.pingRequestsGWC2.getThisDayCount()%></td>
+		<td><%=stats.pingRequestsGWC2.getLastDayCount()%></td>
+		<td><%=stats.pingRequestsGWC2.getTotalCount()%></td>
+	</tr>
+	<tr>
+		<th>Updates (GWC2)</th>
 		<td><%=stats.updateRequestsGWC2.getThisHourCount()%></td>
 		<td><%=stats.updateRequestsGWC2.getLastHourCount()%></td>
 		<td><%=stats.updateRequestsGWC2.getThisDayCount()%></td>
 		<td><%=stats.updateRequestsGWC2.getLastDayCount()%></td>
 		<td><%=stats.updateRequestsGWC2.getTotalCount()%></td>
 	</tr>
+	<tr>
+		<th>IP Updates (GWC2)</th>
+		<td><%=stats.IPUpdateRequestsGWC2.getThisHourCount()%></td>
+		<td><%=stats.IPUpdateRequestsGWC2.getLastHourCount()%></td>
+		<td><%=stats.IPUpdateRequestsGWC2.getThisDayCount()%></td>
+		<td><%=stats.IPUpdateRequestsGWC2.getLastDayCount()%></td>
+		<td><%=stats.IPUpdateRequestsGWC2.getTotalCount()%></td>
+	</tr>
+	<tr>
+		<th>URL Updates (GWC2)</th>
+		<td><%=stats.URLUpdateRequestsGWC2.getThisHourCount()%></td>
+		<td><%=stats.URLUpdateRequestsGWC2.getLastHourCount()%></td>
+		<td><%=stats.URLUpdateRequestsGWC2.getThisDayCount()%></td>
+		<td><%=stats.URLUpdateRequestsGWC2.getLastDayCount()%></td>
+		<td><%=stats.URLUpdateRequestsGWC2.getTotalCount()%></td>
+	</tr>
 </table>
-<h3>Requests by client</h3>
+
+<a name="client"></a>
+<h3>Requests by client</h3><small><a href="#top">top</a></small>
 <table border="1">
 	<tr>
 		<th>Client</th>
@@ -116,7 +185,9 @@ Cache Start Time: <%=stats.startTime%><br>
 		}
 	%>
 </table>
-<h3>Requests by client/version</h3>
+
+<a name="clientversion"></a>
+<h3>Requests by client/version</h3><small><a href="#top">top</a></small>
 <table border="1">
 	<tr>
 		<th>Client/version</th>
@@ -147,7 +218,9 @@ Cache Start Time: <%=stats.startTime%><br>
 	%>
 	
 </table>
-<h3>page requests</h3>
+
+<a name="page"></a>
+<h3>Page requests</h3><small><a href="#top">top</a></small>
 <table border="1">
 	<tr>
 		<th>Client/version</th>

@@ -69,7 +69,7 @@ public class Data implements Serializable {
      */
     private static Data instance;
     /**
-     * Map from a String IP number to a Date object. Used to rate
+     * Map from a String IP number to a RemoteClient object. Used to rate
      * limit updates from clients.
      */
     private HashMap rateLimited;
@@ -118,8 +118,8 @@ public class Data implements Serializable {
                     Iterator it = rateLimited.keySet().iterator();
                     while (it.hasNext()) {
                         String remoteIP = (String)it.next();
-                        Date d = (Date)rateLimited.get(remoteIP);
-                        if (now.getTime() - d.getTime() > MILLIS_PER_HOUR)
+                        RemoteClient r = (RemoteClient)rateLimited.get(remoteIP);
+                        if (now.getTime() - r.getLastUpdated().getTime() > MILLIS_PER_HOUR)
                             it.remove();
                     }
                     it = nets.keySet().iterator();
@@ -312,17 +312,17 @@ public class Data implements Serializable {
 
     /**
      * Check if a particular IP number is rate limited (more than
-     * one update attempt per hour).
-     * @param remoteIP The IP number as String.
+     * one update attempt per hour) and limite its rate
+     * @param remoteC The object representing the client to check.
      * @return True if the IP is rate limited.
      */
-    public synchronized boolean isRateLimited(String remoteIP) {
-        Date now = new Date();
-        Date d = (Date)rateLimited.get(remoteIP);
-        rateLimited.put(remoteIP, now);
-        if (d == null)
+    public synchronized boolean isRateLimited(RemoteClient remoteC){
+        String remoteIP = remoteC.getRemoteIP();
+        RemoteClient r = (RemoteClient)rateLimited.get(remoteIP);
+        rateLimited.put(remoteIP, remoteC);
+        if (r == null)
             return false;
-        return now.getTime() - d.getTime() <= MILLIS_PER_HOUR;
+        return System.currentTimeMillis() - r.getLastUpdated().getTime() <= MILLIS_PER_HOUR;
     }
 
     /**
@@ -484,9 +484,9 @@ public class Data implements Serializable {
             i.close();
             newData.verifyList = new LinkedList();
         } catch (FileNotFoundException e) {
-            context.log("no data file");
+            context.log("GWebCache: no data file");
         } catch (Exception e) {
-            context.log("readData", e);
+            context.log("GWebCache: readData", e);
         }
         if (newData == null)
             newData = new Data();

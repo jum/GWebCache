@@ -17,7 +17,10 @@ import javax.servlet.*;
  * Follow the singleton pattern
  */
 public class Stats  implements Serializable {
-
+    /**
+     * The date the stat was started
+     */
+    public Date statsStartTime;
     /**
      * The date this cache was started.
      */
@@ -53,30 +56,73 @@ public class Stats  implements Serializable {
      * The number of urlfile requests received.
      * This is a GWC1 requests
      */
-    public volatile Counter urlRequests;
+    public volatile Counter urlfileRequests;
 
     /**
      * The number of hostfile requests received.
      * This is a GWC1 requests
      */
-    public volatile Counter hostRequests;
-
+    public volatile Counter hostfileRequests;
+    
     /**
-     * The number of get requests received.
+     * The number of statfile requests received.
+     * This is a GWC1 requests.
+     */
+    public volatile Counter statfileRequests;
+    
+    /**
+     * The number of ping requests received.
+     * This is a GWC1 requests.
+     */
+    public volatile Counter pingRequestsGWC1;
+    
+    /**
+     * The number of update received.
      * This is a GWC1 update.
      */
     public volatile Counter updateRequestsGWC1;
+    
     /**
-     * The number of get requests received.
-     * This is a GWC2 update.
+     * The number of url=... updates received.
+     * This is a GWC1 update.
      */
-    public volatile Counter updateRequestsGWC2;
+    public volatile Counter URLUpdateRequestsGWC1;
+    
+    /**
+     * The number of ip=X.Y.Z.W:PORT updates received.
+     * This is a GWC1 update.
+     */
+    public volatile Counter IPUpdateRequestsGWC1;
+    
     /**
      * The number of get requests received.
      * This is a GWC2 requests for url and host
      */
     public volatile Counter getRequests;
-
+    
+    /**
+     * The number of ping requests received.
+     * This is a GWC2 requests.
+     */
+    public volatile Counter pingRequestsGWC2;
+    
+    /**
+     * The number of updates received.
+     * This is a GWC2 update.
+     */
+    public volatile Counter updateRequestsGWC2;
+    
+    /**
+     * The number of url=... updates received.
+     * This is a GWC2 update.
+     */
+    public volatile Counter URLUpdateRequestsGWC2;
+    
+    /**
+     * The number of ip=X.Y.Z.W:PORT updates received.
+     * This is a GWC2 update.
+     */
+    public volatile Counter IPUpdateRequestsGWC2;
     /**
      * The number of stats page requests received.
      */
@@ -111,28 +157,42 @@ public class Stats  implements Serializable {
      * The only instance of the stats data.
      */
     private static Stats instance = new Stats();
+
     private Stats() {
         clientVersionRequests =
                         Collections.synchronizedMap( new HashMap());
         clientRequests =
                         Collections.synchronizedMap( new HashMap());
-        getRequests = new Counter();
-        hostRequests = new Counter();
-        urlRequests = new Counter();
         numUpdates = new Counter();
         numRequests = new Counter();
+        
+        hostfileRequests = new Counter();
+        urlfileRequests = new Counter();
+        statfileRequests = new Counter();
+        pingRequestsGWC1 = new Counter();
         updateRequestsGWC1 = new Counter();
+        URLUpdateRequestsGWC1 = new Counter();
+        IPUpdateRequestsGWC1 = new Counter();
+       
+        getRequests = new Counter();
+        pingRequestsGWC2 = new Counter();
         updateRequestsGWC2 = new Counter();
-        numStatsRequests = new Counter();;
-        numDataRequests = new Counter();;
-        numIndexRequests = new Counter();;
-        numLicenseRequests = new Counter();;
+        URLUpdateRequestsGWC2 = new Counter();
+        IPUpdateRequestsGWC2 = new Counter();
+        
+        numStatsRequests = new Counter();
+        numDataRequests = new Counter();
+        numIndexRequests = new Counter();
+        numLicenseRequests = new Counter();
+        
         startTime = new Date();
+        statsStartTime = startTime;
         lastHour = startTime.getTime()/Data.MILLIS_PER_HOUR;
         lastDay = startTime.getTime()/Data.MILLIS_PER_DAY;
         lastWeek = startTime.getTime()/Data.MILLIS_PER_WEEK;
         stopTime = null;
     }
+
     /**
      * Retrieve the current cache Stats instance.
      * @return A Stats obejct.
@@ -140,99 +200,68 @@ public class Stats  implements Serializable {
     public static Stats getInstance() {
         return instance;
     }
+
     /**
      * Check if we are past the current hour and move the
      * stats from this hour to that of the previous hour. Do
      * it also for day and week.
      * @param now An instance of Date signifying the current
      * time.
-    */
-     public void bumpHour(Date now) {
-        now.getTime();
-     }
+     */
+    public void bumpHour(Date now) {
+        bumpHour(now.getTime());
+    }
+
     /**
      * Check if we are past the current hour and move the
      * stats from this hour to that of the previous hour. Do
      * it also for day and week
      * @param now the time in millisecond since 1st january 1970
-	*/
-     public void bumpHour(long now) {
+     */
+    public void bumpHour(long now) {
+        int time = 0;
         long thisHour = now / Data.MILLIS_PER_HOUR;
         long thisDay = now / Data.MILLIS_PER_DAY;
         long thisWeek = now / Data.MILLIS_PER_WEEK;
         if (thisWeek != lastWeek) {
             lastWeek = thisWeek;
-
-            numRequests.bumpWeek();
-            numUpdates.bumpWeek();
-            getRequests.bumpWeek();
-            urlRequests.bumpWeek();
-            hostRequests.bumpWeek();
-            updateRequestsGWC1.bumpWeek();
-            updateRequestsGWC2.bumpWeek();
-            numStatsRequests.bumpWeek();
-            numDataRequests.bumpWeek();
-            numIndexRequests.bumpWeek();
-            numLicenseRequests.bumpWeek();
+            time = Counter.WEEK_UPDATE;
+        } else if (thisDay != lastDay) {
+            lastDay = thisDay;
+            time = Counter.DAY_UPDATE;
+        } else if (thisHour != lastHour) {
+            lastHour = thisHour;
+            time = Counter.HOUR_UPDATE;
+        }
+        if (time != 0) {
+            numRequests.bumpTime(time);
+            numUpdates.bumpTime(time);
+            //GWC1 requests
+            urlfileRequests.bumpTime(time);
+            hostfileRequests.bumpTime(time);
+            statfileRequests.bumpTime(time);
+            pingRequestsGWC1.bumpTime(time);
+            updateRequestsGWC1.bumpTime(time);
+            //GWC2 requests
+            updateRequestsGWC2.bumpTime(time);
+            getRequests.bumpTime(time);
+            pingRequestsGWC2.bumpTime(time);
+            //Page requests
+            numStatsRequests.bumpTime(time);
+            numDataRequests.bumpTime(time);
+            numIndexRequests.bumpTime(time);
+            numLicenseRequests.bumpTime(time);
             //Requests by client
             for (Iterator i = clientRequests.entrySet().iterator();
                                                             i.hasNext();) {
-                ((Counter) ((Map.Entry) i.next()).getValue()).bumpWeek();
+                ((Counter) ((Map.Entry) i.next()).getValue()).bumpTime(time);
             }
             //Request by client/version
             for (Iterator i = clientVersionRequests.entrySet().iterator();
-				                            i.hasNext();) {
-                ((Counter) ((Map.Entry) i.next()).getValue()).bumpWeek();
-            }
-        } else if (thisDay != lastDay) {
-            lastDay = thisDay;
-
-            numRequests.bumpDay();
-            numUpdates.bumpDay();
-            getRequests.bumpDay();
-            urlRequests.bumpDay();
-            hostRequests.bumpDay();
-            updateRequestsGWC1.bumpDay();
-            updateRequestsGWC2.bumpDay();
-            numStatsRequests.bumpDay();
-            numDataRequests.bumpDay();
-            numIndexRequests.bumpDay();
-            numLicenseRequests.bumpDay();
-            //Requests by client
-            for(Iterator i = clientRequests.entrySet().iterator();
-                                                            i.hasNext();){
-                ((Counter)((Map.Entry)i.next()).getValue()).bumpDay();
-            }
-            //Request by client/version
-            for(Iterator i = clientVersionRequests.entrySet().iterator();
-                                                            i.hasNext();){
-                ((Counter)((Map.Entry)i.next()).getValue()).bumpDay();
-            }
-        } else if (thisHour != lastHour) {
-            lastHour = thisHour;
-            numRequests.bumpHour();
-            numUpdates.bumpHour();
-            getRequests.bumpHour();
-            urlRequests.bumpHour();
-            hostRequests.bumpHour();
-            updateRequestsGWC1.bumpHour();
-            updateRequestsGWC2.bumpHour();
-            numStatsRequests.bumpHour();
-            numDataRequests.bumpHour();
-            numIndexRequests.bumpHour();
-            numLicenseRequests.bumpHour();
-            //Requests by client
-            for(Iterator i = clientRequests.entrySet().iterator();
-                                                            i.hasNext();){
-                ((Counter)((Map.Entry)i.next()).getValue()).bumpHour();
-            }
-            //Request by client/version
-            for(Iterator i = clientVersionRequests.entrySet().iterator();
-                                                            i.hasNext();){
-            	((Counter)((Map.Entry)i.next()).getValue()).bumpHour();
+                                                            i.hasNext();) {
+                ((Counter) ((Map.Entry) i.next()).getValue()).bumpTime(time);
             }
         }
-
     }
 
     /**
@@ -248,6 +277,7 @@ public class Stats  implements Serializable {
     private void bumpUpdates() {
         numUpdates.bumpCount();
     }
+
     /**
      * Increment the number of GWC1 updates received.
      * and total number of updates received.
@@ -256,6 +286,7 @@ public class Stats  implements Serializable {
         bumpUpdates();
         updateRequestsGWC1.bumpCount();
     }
+
     /**
      * Increment the number GWC2 of updates received
      * and total number of updates received.
@@ -264,22 +295,31 @@ public class Stats  implements Serializable {
         bumpUpdates();
         updateRequestsGWC2.bumpCount();
     }
+
     /**
      * Increment the number of urlfile request
      * This is a GWC1 request
      */
     public void bumpUrlRequests(){
-        urlRequests.bumpCount();
+        urlfileRequests.bumpCount();
     }
 	
     /**
-     * Increment the number of host request
+     * Increment the number of hostfile request
      * This is a GWC1 request
      */
     public void bumpHostRequests(){
-        hostRequests.bumpCount();
+        hostfileRequests.bumpCount();
     }
-	
+
+    /**
+     * Increment the number of statfile request
+     * This is a GWC1 request
+     */
+    public void bumpStatRequests(){
+        statfileRequests.bumpCount();
+    }
+
     /**
      * Increment the number of get request
      * This is a GWC2 request
@@ -312,6 +352,7 @@ public class Stats  implements Serializable {
         } else
             count.bumpCount();
     } 
+
     /**
      * Find the location for the cache stats file. If the "filename"
      * init parameter is not given, use a file in the servlet container
@@ -333,11 +374,13 @@ public class Stats  implements Serializable {
         //context.log("datafile=" + f);
         return f;
     }
+
     /**
      * Write the cache date to disk using serialization.
      * @param context The ServletContext to use for logging.
      */
     public static void writeStats(ServletContext context) {
+        //context.log("Stats.writeStats");
         try {
             ObjectOutputStream o = new ObjectOutputStream(
                                     new FileOutputStream(statsFile(context)));
@@ -347,15 +390,17 @@ public class Stats  implements Serializable {
             }
             o.close();
         } catch (Exception e) {
-            context.log("GWebCache:writeStats", e);
+            context.log("GWebCache: writeStats", e);
         }
     }
+
     /**
      * Read the cache data from disk using serialization. If an
      * error occurs, instanciate an empty cache.
      * @param context The ServletContext to use for logging.
      */
     public static void readStats(ServletContext context) {
+        //context.log("Stats.readStats");
         Stats newStats = null;
         try {
             ObjectInputStream i = new ObjectInputStream(
@@ -363,23 +408,29 @@ public class Stats  implements Serializable {
             newStats = (Stats)i.readObject();
             i.close();
         } catch (FileNotFoundException e) {
-            context.log("GWebCache:no stats file");
+            context.log("GWebCache: no stats file");
         } catch (Exception e) {
-            context.log("GWebCache:readStats", e);
+            context.log("GWebCache: readStats", e);
         }
-        if (newStats == null)
-            newStats = new Stats();
-        instance = newStats;
-        synchronized (instance) {
-            Date now = new Date();
-            instance.startTime = now;
-            for (Date hour = new Date(instance.lastHour*Data.MILLIS_PER_HOUR
-                                + Data.MILLIS_PER_HOUR);
-                 hour.getTime()<now.getTime();
-                 hour.setTime(hour.getTime() + Data.MILLIS_PER_HOUR)) {
-                    instance.bumpHour(hour);
+        if (newStats == null){
+            instance = new Stats();
+        } else {
+            synchronized (instance) {
+                instance = newStats;
+                Date now = new Date();
+                //We only update it if we were down for more then 1 minutes
+                //So if we reload a new version, this don't restart everything
+                if (now.getTime() >= newStats.stopTime.getTime() + 1000 * 60) {
+                    instance.startTime = now;
+                    //We bump all hour that we were down
+                    long hour = instance.lastHour * Data.MILLIS_PER_HOUR
+                    + Data.MILLIS_PER_HOUR;
+                    while(hour < now.getTime()){
+                        instance.bumpHour(hour);
+                        hour += Data.MILLIS_PER_HOUR;
+                    }
+                }                  
             }
-
         }
     }
 }
