@@ -6,9 +6,6 @@
 
 package org.mager.gwebcache;
 
-import java.util.*;
-import java.io.*;
-
 /**
  * Encapsulate the data for an URL that is queued for verification.
  */
