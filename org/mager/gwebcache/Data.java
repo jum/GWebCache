@@ -40,6 +40,10 @@ public class Data implements Serializable {
      * The time to keep a cache URL in the "urlfile".
      */
     public final static long MAX_URL_AGE = 24 * MILLIS_PER_HOUR;
+    /**
+     * The time an URL is considered valid after verification.
+     */
+    public final static long MAX_URL_VALID = 2 * MILLIS_PER_HOUR;
 
     /**
      * The maximum number of client IP numbers in the "hostfile".
@@ -135,9 +139,19 @@ public class Data implements Serializable {
                         it1 = map.keySet().iterator();
                         while (it1.hasNext()) {
                             String url = (String)it1.next();
-                            Date d = ((RemoteURL)map.get(url)).getLastUpdated();
+                            RemoteURL remoteURL = (RemoteURL)map.get(url);
+                            Date d = remoteURL.getLastUpdated();
                             if (now.getTime() - d.getTime() > MAX_URL_AGE)
                                 it1.remove();
+                            else {
+                                d = remoteURL.getLastChecked();
+                                /*
+                                 * Re-verify good URLs occasionally.
+                                 */
+                                if (!remoteURL.getCacheVersion().startsWith(RemoteURL.STATE_FAILED) &&
+                                    now.getTime() - d.getTime() > MAX_URL_VALID)
+                                    addUrlForVerification(netName, remoteURL);
+                            }
                         }
                         count += map.size();
                         if (count == 0)
@@ -255,6 +269,7 @@ public class Data implements Serializable {
                 //context.log("verify exception:", ex);
                 target.setCacheVersion(RemoteURL.STATE_FAILED + ": " + ex);
             }
+            target.setLastChecked(new Date());
         }
     }
 

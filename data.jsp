@@ -51,7 +51,8 @@ GWebCache <%=version%> Data
 			<th>Version</th>
 			<th>Proto</th>
 			<th>Client</th>
-			<th>Time</th>
+			<th>Last Updated</th>
+			<th>Last Checked</th>
 <%
 			map = net.getURLs();
 			it1 = map.keySet().iterator();
@@ -71,6 +72,7 @@ GWebCache <%=version%> Data
 				<td><%=url.getProtoVersion()%></td>
 				<td><%=url.getClientVersion()%></td>
 				<td><%=url.getLastUpdated()%></td>
+				<td><%=url.getLastChecked()%></td>
 				</tr>
 <%
 			}

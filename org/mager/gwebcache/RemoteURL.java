@@ -62,6 +62,10 @@ public class RemoteURL implements Serializable {
      * The time stamp this record was last updated.
      */
     private Date lastUpdated;
+    /**
+     * The time stamp this record was last checked to be valid.
+     */
+    private Date lastChecked;
 
     public RemoteURL(String remoteURL, int protoVersion,
                      ClientVersion clientVersion) {
@@ -94,6 +98,14 @@ public class RemoteURL implements Serializable {
 
     public Date getLastUpdated() {
         return lastUpdated;
+    }
+
+    public Date getLastChecked() {
+        return lastChecked;
+    }
+
+    public void setLastChecked(Date lastChecked) {
+        this.lastChecked = lastChecked;
     }
 
     public String toString() {
