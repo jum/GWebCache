@@ -48,6 +48,9 @@
 			<include name="**/*.class"/>
 			<exclude name="**/*$$Tester.class"/>
 		</classes>
+		<metainf dir=".">
+			<include name="context.xml"/>
+		</metainf>
 	</war>
 </target>
 
