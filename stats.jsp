@@ -18,6 +18,8 @@ GWebCache <%=version%> Stats
 <%@ include file="menu.html" %>
 <hr>
 Cache Start Time: <%=stats.startTime%><br>
+<center><h2>Statistics</h2></center>
+<h3>Global Stats</h3>
 <table border="1">
 	<tr>
 		<th></th>
@@ -83,6 +85,17 @@ Cache Start Time: <%=stats.startTime%><br>
 		<td><%=stats.updateRequestsGWC2.getLastDayCount()%></td>
 		<td><%=stats.updateRequestsGWC2.getTotalCount()%></td>
 	</tr>
+</table>
+<h3>Requests by client</h3>
+<table border="1">
+	<tr>
+		<th>Client</th>
+		<th>This Hour</th>
+		<th>Last Hour</th>
+		<th>This Day</th>
+		<th>Last Day</th>
+		<th>Since Start</th>
+	</tr>
 	<%
 		Iterator it1 = new TreeSet(
 			stats.clientRequests.keySet()).iterator();
@@ -102,7 +115,17 @@ Cache Start Time: <%=stats.startTime%><br>
 	<%
 		}
 	%>
-
+</table>
+<h3>Requests by client/version</h3>
+<table border="1">
+	<tr>
+		<th>Client/version</th>
+		<th>This Hour</th>
+		<th>Last Hour</th>
+		<th>This Day</th>
+		<th>Last Day</th>
+		<th>Since Start</th>
+	</tr>
 	<%
 		it1 = new TreeSet(
 			stats.clientVersionRequests.keySet()).iterator();
@@ -124,6 +147,50 @@ Cache Start Time: <%=stats.startTime%><br>
 	%>
 	
 </table>
+<h3>page requests</h3>
+<table border="1">
+	<tr>
+		<th>Client/version</th>
+		<th>This Hour</th>
+		<th>Last Hour</th>
+		<th>This Day</th>
+		<th>Last Day</th>
+		<th>Since Start</th>
+	</tr>
+	<tr>
+		<th>data.jsp</th>
+		<td><%=stats.numDataRequests.getThisHourCount()%></td>
+		<td><%=stats.numDataRequests.getLastHourCount()%></td>
+		<td><%=stats.numDataRequests.getThisDayCount()%></td>
+		<td><%=stats.numDataRequests.getLastDayCount()%></td>
+		<td><%=stats.numDataRequests.getTotalCount()%></td>
+	</tr>	
+	<tr>
+		<th>index.jsp</th>
+		<td><%=stats.numIndexRequests.getThisHourCount()%></td>
+		<td><%=stats.numIndexRequests.getLastHourCount()%></td>
+		<td><%=stats.numIndexRequests.getThisDayCount()%></td>
+		<td><%=stats.numIndexRequests.getLastDayCount()%></td>
+		<td><%=stats.numIndexRequests.getTotalCount()%></td>
+	</tr>
+	<tr>
+		<th>license.jsp</th>
+		<td><%=stats.numLicenseRequests.getThisHourCount()%></td>
+		<td><%=stats.numLicenseRequests.getLastHourCount()%></td>
+		<td><%=stats.numLicenseRequests.getThisDayCount()%></td>
+		<td><%=stats.numLicenseRequests.getLastDayCount()%></td>
+		<td><%=stats.numLicenseRequests.getTotalCount()%></td>
+	</tr>
+	<tr>
+		<th>stats.jsp</th>
+		<td><%=stats.numStatsRequests.getThisHourCount()%></td>
+		<td><%=stats.numStatsRequests.getLastHourCount()%></td>
+		<td><%=stats.numStatsRequests.getThisDayCount()%></td>
+		<td><%=stats.numStatsRequests.getLastDayCount()%></td>
+		<td><%=stats.numStatsRequests.getTotalCount()%></td>
+	</tr>
+</table>
+
 <hr>
 Current Time: <%=new Date()%><br>
 <%@ include file="address.html" %>
