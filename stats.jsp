@@ -46,7 +46,6 @@ Last Cache Start Time: <%=stats.startTime%><br>
 		<th>Last Day</th>
 		<th>Since Start</th>
 	</tr>
-	<%stats.bumpHour(System.currentTimeMillis());%>
 	<tr>
 		<th rowspan="2" valign="top">Global</th>
 		<th>Requests</th>

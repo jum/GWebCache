@@ -106,7 +106,8 @@ public class Data implements Serializable {
 
     /**
      * Perform hourly maintenance on the cache data by deleting
-     * too old data. Also write the data to disk.
+     * too old data. Also write the data and stats to disk. Update the 
+     * hourly stats
      * @param context The ServletContext to use for logging.
      */
     public void hourly(ServletContext context) {
@@ -160,6 +161,7 @@ public class Data implements Serializable {
                     }
                 }
                 writeData(context);
+                Stats.getInstance().bumpHour(System.currentTimeMillis());
                 Stats.writeStats(context);
             } catch (InterruptedException ex) {
                 //context.log("hourly exiting");

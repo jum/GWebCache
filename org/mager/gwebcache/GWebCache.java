@@ -122,7 +122,6 @@ public class GWebCache extends HttpServlet {
                         HttpServletResponse response)
                         throws ServletException, IOException {
         PrintWriter out = response.getWriter();
-        stats.bumpHour(System.currentTimeMillis());
         stats.numRequests.bumpCount();
         ClientVersion clientVersion = clientVersionFromParams(request);
 		stats.bumpByClient(clientVersion);
@@ -200,7 +199,6 @@ public class GWebCache extends HttpServlet {
                         throws ServletException, IOException {
         PrintWriter out = response.getWriter();
         Date now = new Date();
-        stats.bumpHour(now);
         stats.numRequests.bumpCount();
         try {
             RemoteClient remoteParam = remoteFromParams(request);
