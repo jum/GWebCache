@@ -58,10 +58,16 @@ GWebCache <%=version%> Data
 			while (it1.hasNext()) {
 				String key = (String)it1.next();
 				RemoteURL url = (RemoteURL)map.get(key);
+				String urlTitle = url.getRemoteURL();
+				if (urlTitle.length() > 60)
+					urlTitle = urlTitle.substring(0, 60) + "...";
+				String cacheVersion = url.getCacheVersion();
+				if (cacheVersion.length() > 80)
+					cacheVersion = cacheVersion.substring(0, 80) + "...";
 %>
 				<tr>
-				<td><a href="<%=url.getRemoteURL()%>"><%=url.getRemoteURL()%></a></td>
-				<td><%=url.getCacheVersion()%></td>
+				<td><a href="<%=url.getRemoteURL()%>"><%=urlTitle%></a></td>
+				<td><%=cacheVersion%></td>
 				<td><%=url.getProtoVersion()%></td>
 				<td><%=url.getClientVersion()%></td>
 				<td><%=url.getLastUpdated()%></td>
