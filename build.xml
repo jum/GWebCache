@@ -35,6 +35,7 @@
 
 <target name="clobber" depends="clean">
 	<delete file="${ant.project.name}.war"/>
+	<delete dir="doc"/>
 </target>
 
 <target name="war" depends="compile">
