@@ -14,7 +14,7 @@ GWebCache <%=version%> Stats
 <body bgcolor="white">
 <a name="top"></a>
 <h1>
-<img src="icon.gif" width="32" height="32">
+<img src="gnutella.gif" width="83" height="103" align="center">
 GWebCache <%=version%> Stats
 </h1>
 <%@ include file="menu.html" %>
