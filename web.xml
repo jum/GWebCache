@@ -10,10 +10,12 @@
 
 	<display-name>Gnutella Web Cache</display-name>
 
+	<!--
 	<context-param>
 		<param-name>filename</param-name>
 		<param-value>/tmp/gwebcache.data</param-value>
 	</context-param>
+	-->
 
 	<servlet>
 		<servlet-name>GWebCache</servlet-name>
