@@ -13,14 +13,14 @@ GWebCache <%=version%>
 <img src="icon.gif" width="32" height="32">
 GWebCache <%=version%>
 </h1>
-This is an experimental Java servlet based Gnutella web cache. For more
+[ <a href="index.jsp">Home</a> | <a href="data.jsp">Data</a> ]
+<hr>
+This is a Java servlet based Gnutella web cache. For more
 information see this <a href="http://www.mager.org/GWebCache/">page</a>.
-<p>
-There are no statistics yet. Click this <a href="data.jsp">link</a>
-for a data dump.
-<p>
+<hr>
 Running on 
 <%=getServletConfig().getServletContext().getServerInfo()%><br>
-Current Time: <%=new Date()%>
+Current Time: <%=new Date()%><br>
+<address><a href="mailto:jum@anubis.han.de">Jens-Uwe Mager</a>
 </body>
 </html>

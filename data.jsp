@@ -13,6 +13,8 @@ GWebCache <%=version%> Data
 <img src="icon.gif" width="32" height="32">
 GWebCache <%=version%> Data
 </h1>
+[ <a href="index.jsp">Home</a> | <a href="data.jsp">Data</a> ]
+<hr>
 <%
 	Data i = Data.getInstance();
 	synchronized (i) {
@@ -94,7 +96,8 @@ GWebCache <%=version%> Data
 <%
 	}
 %>
-<p>
-Current Time: <%=new Date()%>
+<hr>
+Current Time: <%=new Date()%><br>
+<address><a href="mailto:jum@anubis.han.de">Jens-Uwe Mager</a>
 </body>
 </html>
