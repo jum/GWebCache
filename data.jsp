@@ -95,7 +95,7 @@ GWebCache <%=version%> Data
 					nbGood++;
 %>
 					<tr>
-					<td><a href="<%=urlTitle%>"><%=urlTitle%></a></td>
+					<td><a href="<%=url.getRemoteURL()%>"><%=urlTitle%></a></td>
 					<td><%=cacheVersion%></td>
 					<td><%=url.getProtoVersion()%></td>
 					<td><%=url.getClientVersion()%></td>
@@ -134,7 +134,7 @@ GWebCache <%=version%> Data
 					nbBad++;
 %>
 					<tr>
-					<td><%=urlTitle%></td>
+					<td><a href="<%=url.getRemoteURL()%>"><%=urlTitle%></a></td>
 					<td><%=cacheVersion%></td>
 					<td><%=url.getProtoVersion()%></td>
 					<td><%=url.getClientVersion()%></td>
