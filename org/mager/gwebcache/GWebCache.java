@@ -344,12 +344,13 @@ public class GWebCache extends HttpServlet {
         String client = request.getParameter("client");
         String version = request.getParameter("version");
         /*
-         * Hack for the strange way the bazooka php script communicates
-         * its version.
+         * V2 requests may combine client and version into the client
+         * parameter. The client ID is then the first four characters,
+         * the rest (up to 16 chars) is the version.
          */
-        if (client != null && version == null && client.startsWith("TESTBazooka_")) {
-            version = client.substring(12);
-            client = "Bazooka";
+        if (client != null && version == null && client.length() > 4) {
+            version = client.substring(4);
+            client = client.substring(0, 4);
         }
         return new ClientVersion(client, version);
     }
@@ -381,6 +382,6 @@ public class GWebCache extends HttpServlet {
     }
 
     public static String getVersion() {
-        return "0.2.8";
+        return "0.2.9";
     }
 }

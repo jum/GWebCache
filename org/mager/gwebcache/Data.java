@@ -207,16 +207,17 @@ public class Data implements Serializable {
                 String testURL = target.getRemoteURL();
                 int protoVersion = target.getProtoVersion();
                 if (protoVersion == RemoteURL.PROTO_V1)
-                    testURL = testURL + "?ping=1";
+                    testURL = testURL + "?ping=1" + "&client=JGWC&version=" +
+                        GWebCache.getVersion();
                 else {
                     /*
                      * Well, the get=1 parameter forces a V2 query. It
                      * would be nice if all scripts did understand the
                      * Jon Atkins extension ping=2.
                      */
-                    testURL = testURL + "?ping=1&get=1&net=" + vu.getNetName();
+                    testURL = testURL + "?ping=1&get=1&net=" + vu.getNetName() +
+                        "&client=JGWC" + GWebCache.getVersion();
                 }
-                testURL = testURL + "&client=JGWC&version=" + GWebCache.getVersion();
                 //context.log("verifying: " + testURL);
                 URL url = new URL(testURL);
                 HttpURLConnection urlConn = (HttpURLConnection)url.openConnection();
