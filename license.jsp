@@ -5,21 +5,20 @@
 <html>
 <head>
 <title>
-GWebCache <%=version%>
+GWebCache <%=version%> License
 </title>
 </head>
 <body bgcolor="white">
 <h1>
 <img src="icon.gif" width="32" height="32">
-GWebCache <%=version%>
+GWebCache <%=version%> License
 </h1>
 <%@ include file="menu.html" %>
 <hr>
-This is a Java servlet based Gnutella web cache. For more
-information see this <a href="http://www.mager.org/GWebCache/">page</a>.
+<pre>
+<%@ include file="COPYING" %>
+</pre>
 <hr>
-Running on 
-<%=getServletConfig().getServletContext().getServerInfo()%><br>
 Current Time: <%=new Date()%><br>
 <address><a href="mailto:jum@anubis.han.de">Jens-Uwe Mager</a>
 </body>

@@ -13,9 +13,7 @@ GWebCache <%=version%> Stats
 <img src="icon.gif" width="32" height="32">
 GWebCache <%=version%> Stats
 </h1>
-[ <a href="index.jsp">Home</a> |
-<a href="data.jsp">Data</a> |
-<a href="stats.jsp">Stats</a> ]
+<%@ include file="menu.html" %>
 <hr>
 Cache Start Time: <%=Stats.startTime%><br>
 <table border="1">

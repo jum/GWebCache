@@ -40,7 +40,9 @@
 <target name="war" depends="compile">
 	<war destfile="${ant.project.name}.war" basedir="${basedir}"
 		webxml="web.xml">
+		<include name="COPYING"/>
 		<include name="**/*.jsp"/>
+		<include name="**/*.html"/>
 		<include name="**/*.gif"/>
 		<classes dir=".">
 			<include name="**/*.class"/>
