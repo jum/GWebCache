@@ -38,20 +38,19 @@ public class ClientVersion implements Serializable {
     }
 
     public String toString() {
-        return (client == null ? "NULL" : client) + "/" +
-                (version == null ? "NULL" : version);
+        return client + "/" + version;
     }
    
-	public int hashCode(){
-		return client.hashCode() ^ version.hashCode();
-	}
+    public int hashCode(){
+        return client.hashCode() ^ version.hashCode();
+    }
 
-	public boolean equals(Object o){
-		if (! (o instanceof ClientVersion))
-			return false;
-		ClientVersion c = (ClientVersion)o;
-		if(c.client.equals(client) && c.version.equals(version))
-			return true;
-		return false;
-	}
+    public boolean equals(Object o){
+        if (! (o instanceof ClientVersion))
+            return false;
+        ClientVersion c = (ClientVersion)o;
+        if(c.client.equals(client) && c.version.equals(version))
+            return true;
+        return false;
+    }
 }
