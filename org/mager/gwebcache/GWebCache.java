@@ -254,10 +254,11 @@ public class GWebCache extends HttpServlet {
     }
 	/**
 	 * Parse the remote client data from the request, including
-	 * remote IP, port number and client ID and version. 
+	 * remote IP, port number. Client ID and version are supplied
+	 * from previously parsed parameters. 
 	 * @param request The HttpServletRequest to extract the
 	 * parameters from.
-	 * @param A ClientVersion object describing the client
+	 * @param c A ClientVersion object describing the client
 	 * 				It will be put in the RemoteClient object created
 	 * @return A RemoteClient object describing the client.
 	 * @throws WebCacheException
