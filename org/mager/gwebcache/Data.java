@@ -8,6 +8,7 @@ package org.mager.gwebcache;
 
 import java.util.*;
 import java.io.*;
+import java.net.*;
 import javax.servlet.*;
 
 public class Data implements Serializable {
@@ -98,13 +99,54 @@ public class Data implements Serializable {
                 }
                 target = (RemoteURL)verifyList.removeFirst();
             }
-            context.log("verifying: " + target.getRemoteURL());
-            // TODO: ping remote
-            target.setCacheVersion("not tested");
+            if (Thread.interrupted())
+                return;
+            target.setCacheVersion(RemoteURL.STATE_CHECKING);
+            try {
+                String testURL = target.getRemoteURL();
+                int protoVersion = target.getProtoVersion();
+                if (protoVersion == RemoteURL.PROTO_V1)
+                    testURL = testURL + "?ping=1";
+                else
+                    testURL = testURL + "?ping=1&get=1";
+                testURL = testURL + "&client=jumswebcache&version=" + GWebCache.getVersion();
+                //context.log("verifying: " + testURL);
+                URL url = new URL(testURL);
+                BufferedReader in = new BufferedReader(new InputStreamReader(
+                                                url.openStream()));
+                String line;
+                String cacheVersion = RemoteURL.STATE_FAILED;
+                while ((line = in.readLine()) != null) {
+                    if (Thread.interrupted())
+                        return;
+                    if (protoVersion == RemoteURL.PROTO_V1) {
+                        if (line.length() > 4 && 
+                            line.substring(0, 4).equalsIgnoreCase("PONG")) {
+                            cacheVersion = line.substring(4);
+                            break;
+                        }
+                    } else {
+                        if (line.length() > 7 && 
+                            line.substring(0, 7).equalsIgnoreCase("I|pong|")) {
+                            cacheVersion = line.substring(7);
+                            int i = cacheVersion.indexOf('|');
+                            if (i != -1)
+                                cacheVersion = cacheVersion.substring(0, i);
+                            break;
+                        }
+                    }
+                }
+                in.close();
+                target.setCacheVersion(cacheVersion.trim());
+            } catch (Exception ex) {
+                //context.log("verify exception:", ex);
+                target.setCacheVersion(RemoteURL.STATE_FAILED);
+            }
         }
     }
 
     public void addUrlForVerification(RemoteURL url) {
+        url.setCacheVersion(RemoteURL.STATE_QUEUED);
         synchronized(verifyList) {
             verifyList.addLast(url);
             verifyList.notify();
@@ -220,6 +262,8 @@ public class Data implements Serializable {
             if (url.getProtoVersion() != protoVersion)
                 continue;
             String cacheVersion = url.getCacheVersion();
+            if (cacheVersion.equals(RemoteURL.STATE_QUEUED))
+                continue;
             if (cacheVersion.equals(RemoteURL.STATE_CHECKING))
                 continue;
             if (cacheVersion.equals(RemoteURL.STATE_FAILED))
@@ -256,6 +300,8 @@ public class Data implements Serializable {
                 String url = (String)it1.next();
                 RemoteURL u = (RemoteURL)map.get(url);
                 String cv = u.getCacheVersion();
+                if (cv.equals(RemoteURL.STATE_QUEUED))
+                    instance.addUrlForVerification(u);
                 if (cv.equals(RemoteURL.STATE_CHECKING))
                     instance.addUrlForVerification(u);
             }

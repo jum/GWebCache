@@ -11,6 +11,7 @@ import java.io.*;
 
 public class RemoteURL implements Serializable {
 
+    public static final String STATE_QUEUED = "QUEUED";
     public static final String STATE_CHECKING = "CHECKING";
     public static final String STATE_FAILED = "FAILED";
     public static final int PROTO_V1 = 1;
@@ -27,7 +28,7 @@ public class RemoteURL implements Serializable {
         this.remoteURL = remoteURL;
         this.protoVersion = protoVersion;
         this.clientVersion = clientVersion;
-        cacheVersion = STATE_CHECKING;
+        cacheVersion = STATE_QUEUED;
         lastUpdated = new Date();
     }
 
