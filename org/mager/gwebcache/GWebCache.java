@@ -46,8 +46,9 @@ public class GWebCache extends HttpServlet {
         checkWorkers(context);
     }
 
-    /*
+    /**
      * Check if the worker threads are running and start them if needed.
+     * @param context The ServletContext to use for logging.
      */
     public void checkWorkers(final ServletContext context) {
         if (hourlyWorker == null || !hourlyWorker.isAlive()) {
