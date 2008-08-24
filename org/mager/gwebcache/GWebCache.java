@@ -134,16 +134,16 @@ public class GWebCache extends HttpServlet {
                 out.println("PONG jumswebcache/" + getVersion());
             } else if (request.getParameter("urlfile") != null) {
             	stats.urlfileRequests.bumpCount();
-                Iterator it = Data.getInstance().getURLs(netName, RemoteURL.PROTO_V1).iterator();
+                Iterator<RemoteURL> it = Data.getInstance().getURLs(netName, RemoteURL.PROTO_V1).iterator();
                 while (it.hasNext()) {
-                    RemoteURL url = (RemoteURL)it.next();
+                    RemoteURL url = it.next();
                     out.println(url.getRemoteURL());
                 }
             } else if (request.getParameter("hostfile") != null) {
             	stats.hostfileRequests.bumpCount();
-                Iterator it = Data.getInstance().getHosts(netName).iterator();
+                Iterator<RemoteClient> it = Data.getInstance().getHosts(netName).iterator();
                 while (it.hasNext()) {
-                    RemoteClient host = (RemoteClient)it.next();
+                    RemoteClient host = it.next();
                     out.println(host.getRemoteIP() + ":" + host.getPort());
                 }
             } else if (request.getParameter("url") != null || request.getParameter("ip") != null) {
@@ -264,17 +264,17 @@ public class GWebCache extends HttpServlet {
             }
             if (request.getParameter("get") != null) {
             	stats.getRequests.bumpCount();
-                Iterator it = Data.getInstance().getHosts(net).iterator();
-                while (it.hasNext()) {
-                    RemoteClient host = (RemoteClient)it.next();
+                Iterator<RemoteClient> cit = Data.getInstance().getHosts(net).iterator();
+                while (cit.hasNext()) {
+                    RemoteClient host = cit.next();
                     Date d = host.getLastUpdated();
                     long age = (now.getTime() - d.getTime())/1000;
                     out.println("H|" + host.getRemoteIP() + ":" + host.getPort() + "|" + age);
                     didOne = true;
                 }
-                it = Data.getInstance().getURLs(net, RemoteURL.PROTO_V2).iterator();
-                while (it.hasNext()) {
-                    RemoteURL url = (RemoteURL)it.next();
+                Iterator<RemoteURL> uit = Data.getInstance().getURLs(net, RemoteURL.PROTO_V2).iterator();
+                while (uit.hasNext()) {
+                    RemoteURL url = uit.next();
                     Date d = url.getLastUpdated();
                     long age = (now.getTime() - d.getTime())/1000;
                     out.println("U|" + url.getRemoteURL() + "|" + age);

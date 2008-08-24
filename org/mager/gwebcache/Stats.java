@@ -156,14 +156,14 @@ public class Stats  implements Serializable {
      * We don't differenciate between version
      * String(client) -> Counter
      */
-    public Map clientRequests;
+    public Map<String, Counter> clientRequests;
 
     /**
      * The number of request by client/version 
      * We differenciate between version
      * ClientVersion -> Counter
      */
-    public Map clientVersionRequests;
+    public Map<ClientVersion, Counter> clientVersionRequests;
     
     /**
      * The only instance of the stats data.
@@ -172,9 +172,9 @@ public class Stats  implements Serializable {
 
     private Stats() {
         clientVersionRequests =
-                        Collections.synchronizedMap( new HashMap());
+                        Collections.synchronizedMap( new HashMap<ClientVersion, Counter>());
         clientRequests =
-                        Collections.synchronizedMap( new HashMap());
+                        Collections.synchronizedMap( new HashMap<String, Counter>());
         numUpdates = new Counter();
         numRequests = new Counter();
         
@@ -272,14 +272,14 @@ public class Stats  implements Serializable {
             numIndexRequests.bumpTime(time);
             numLicenseRequests.bumpTime(time);
             //Requests by client
-            for (Iterator i = clientRequests.entrySet().iterator();
+            for (Iterator<Map.Entry<String, Counter>> i = clientRequests.entrySet().iterator();
                                                             i.hasNext();) {
-                ((Counter) ((Map.Entry) i.next()).getValue()).bumpTime(time);
+                i.next().getValue().bumpTime(time);
             }
             //Request by client/version
-            for (Iterator i = clientVersionRequests.entrySet().iterator();
+            for (Iterator<Map.Entry<ClientVersion, Counter>> i = clientVersionRequests.entrySet().iterator();
                                                             i.hasNext();) {
-                ((Counter) ((Map.Entry) i.next()).getValue()).bumpTime(time);
+                i.next().getValue().bumpTime(time);
             }
         }
     }
@@ -313,14 +313,14 @@ public class Stats  implements Serializable {
         //make that we will not count 1 request
 		
         //We bump the number of request for this client
-        Counter count = (Counter)clientRequests.get(client);
+        Counter count = clientRequests.get(client);
         if(count == null){
             clientRequests.put(client,new Counter(1));
         } else
             count.bumpCount();
 
         //We bump the number of request for this client/version
-        count = (Counter)clientVersionRequests.get(c);
+        count = clientVersionRequests.get(c);
         if(count == null){
             clientVersionRequests.put(c,new Counter(1));
         } else

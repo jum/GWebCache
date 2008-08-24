@@ -11,7 +11,7 @@ import java.io.*;
 /**
  * Encapsulate the Gnutella client ID and version strings.
  */
-public class ClientVersion implements Serializable, Comparable {
+public class ClientVersion implements Serializable, Comparable<ClientVersion> {
 
     public final static String UNKNOWN = "UNKNOWN";
     /**
@@ -55,11 +55,10 @@ public class ClientVersion implements Serializable, Comparable {
         return false;
     }
 
-    public int compareTo(Object o) {
-        ClientVersion c = (ClientVersion)o;
-        int ret = client.compareTo(c.client);
+    public int compareTo(ClientVersion o) {
+        int ret = client.compareTo(o.client);
         if (ret == 0)
-            return version.compareTo(c.version);
+            return version.compareTo(o.version);
         return ret;
     }
 }

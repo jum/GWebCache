@@ -72,28 +72,28 @@ public class Data implements Serializable {
      * Map from a String IP number to a RemoteClient object. Used to rate
      * limit updates from clients.
      */
-    private HashMap rateLimited;
+    private HashMap<String, RemoteClient> rateLimited;
     /**
      * Map from a String network name to a GnutellaNet object.
      * @see GnutellaNet
      */
-    private HashMap nets;
+    private HashMap<String, GnutellaNet> nets;
     /**
      * The queue of VerifyURLs currently being verified. This is
      * not serialized as it can be reconstructed from the cacheVersion
      * string in each RemoteURL.
      * @see VerifyURL
      */
-    private transient LinkedList verifyList;
+    private transient LinkedList<VerifyURL> verifyList;
 
     /**
      * Instanciate a new set of cache data. Used only if no
      * file to read the data from is found.
      */
     private Data() {
-        rateLimited = new HashMap();
-        nets = new HashMap();
-        verifyList = new LinkedList();
+        rateLimited = new HashMap<String, RemoteClient>();
+        nets = new HashMap<String, GnutellaNet>();
+        verifyList = new LinkedList<VerifyURL>();
     }
 
     /**
@@ -116,31 +116,30 @@ public class Data implements Serializable {
                 Thread.sleep(MILLIS_PER_HOUR);
                 synchronized (this) {
                     Date now = new Date();
-                    Iterator it = rateLimited.keySet().iterator();
+                    Iterator<String> it = rateLimited.keySet().iterator();
                     while (it.hasNext()) {
-                        String remoteIP = (String)it.next();
-                        RemoteClient r = (RemoteClient)rateLimited.get(remoteIP);
+                        String remoteIP = it.next();
+                        RemoteClient r = rateLimited.get(remoteIP);
                         if (now.getTime() - r.getLastUpdated().getTime() > MILLIS_PER_HOUR)
                             it.remove();
                     }
                     it = nets.keySet().iterator();
                     while (it.hasNext()) {
-                        String netName = (String)it.next();
-                        GnutellaNet net = (GnutellaNet)nets.get(netName);
-                        HashMap map = net.getHosts();
-                        Iterator it1 = map.keySet().iterator();
+                        String netName = it.next();
+                        GnutellaNet net = nets.get(netName);
+                        HashMap<String, RemoteClient> hmap = net.getHosts();
+                        Iterator<String> it1 = hmap.keySet().iterator();
                         while (it1.hasNext()) {
-                            String remoteIP = (String)it1.next();
-                            Date d = ((RemoteClient)map.get(remoteIP)).getLastUpdated();
+                            String remoteIP = it1.next();
+                            Date d = hmap.get(remoteIP).getLastUpdated();
                             if (now.getTime() - d.getTime() > MAX_HOST_AGE)
                                 it1.remove();
                         }
-                        int count = map.size();
-                        map = net.getURLs();
-                        it1 = map.keySet().iterator();
+                        HashMap<String, RemoteURL> umap = net.getURLs();
+                        it1 = umap.keySet().iterator();
                         while (it1.hasNext()) {
-                            String url = (String)it1.next();
-                            RemoteURL remoteURL = (RemoteURL)map.get(url);
+                            String url = it1.next();
+                            RemoteURL remoteURL = umap.get(url);
                             Date d = remoteURL.getLastUpdated();
                             if (now.getTime() - d.getTime() > MAX_URL_AGE)
                                 it1.remove();
@@ -157,8 +156,7 @@ public class Data implements Serializable {
                                     addUrlForVerification(netName, remoteURL);
                             }
                         }
-                        count += map.size();
-                        if (count == 0)
+                        if (hmap.size() == 0 && umap.size() == 0)
                             it.remove();
                     }
                 }
@@ -193,7 +191,7 @@ public class Data implements Serializable {
                         return;
                     }
                 }
-                vu = (VerifyURL)verifyList.removeFirst();
+                vu = verifyList.removeFirst();
             }
             /*
              * In case we did not wait check if the thread is supposed
@@ -332,7 +330,7 @@ public class Data implements Serializable {
      */
     public synchronized boolean isRateLimited(RemoteClient remoteC){
         String remoteIP = remoteC.getRemoteIP();
-        RemoteClient r = (RemoteClient)rateLimited.get(remoteIP);
+        RemoteClient r = rateLimited.get(remoteIP);
         rateLimited.put(remoteIP, remoteC);
         if (r == null)
             return false;
@@ -347,16 +345,16 @@ public class Data implements Serializable {
      */
     public synchronized void addHost(String netName, RemoteClient remoteClient) {
         GnutellaNet net = lookupNet(netName);
-        HashMap map = net.getHosts();
+        HashMap<String, RemoteClient> map = net.getHosts();
         map.put(remoteClient.getRemoteIP(), remoteClient);
         Date oldest = remoteClient.getLastUpdated();
         Date now = new Date();
         while (map.size() > MAX_HOSTS_STORED) {
             String oldestKey = null;
-            Iterator it = map.keySet().iterator();
+            Iterator<String> it = map.keySet().iterator();
             while (it.hasNext()) {
-                String key = (String)it.next();
-                Date d = ((RemoteClient)map.get(key)).getLastUpdated();
+                String key = it.next();
+                Date d = map.get(key).getLastUpdated();
                 if (now.getTime() - d.getTime() > MAX_HOST_AGE)
                     it.remove();
                 if (oldest.getTime() >= d.getTime()) {
@@ -378,7 +376,7 @@ public class Data implements Serializable {
      */
     public synchronized void addURL(String netName, RemoteURL remoteURL) {
         GnutellaNet net = lookupNet(netName);
-        HashMap map = net.getURLs();
+        HashMap<String, RemoteURL> map = net.getURLs();
         if (map.containsKey(remoteURL.getRemoteURL()))
             return;
         map.put(remoteURL.getRemoteURL(), remoteURL);
@@ -387,10 +385,10 @@ public class Data implements Serializable {
         Date now = new Date();
         while (map.size() > MAX_URLS_STORED) {
             String oldestKey = null;
-            Iterator it = map.keySet().iterator();
+            Iterator<String> it = map.keySet().iterator();
             while (it.hasNext()) {
-                String key = (String)it.next();
-                Date d = ((RemoteURL)map.get(key)).getLastUpdated();
+                String key = it.next();
+                Date d = map.get(key).getLastUpdated();
                 if (now.getTime() - d.getTime() > MAX_URL_AGE)
                     it.remove();
                 if (oldest.getTime() >= d.getTime()) {
@@ -411,7 +409,7 @@ public class Data implements Serializable {
      * @return The GnutellaNet describing the network.
      */
     public GnutellaNet lookupNet(String netName) {
-        GnutellaNet net = (GnutellaNet)nets.get(netName);
+        GnutellaNet net = nets.get(netName);
         if (net == null) {
             net = new GnutellaNet(netName);
             nets.put(netName, net);
@@ -423,11 +421,11 @@ public class Data implements Serializable {
      * Get the HashMap of GnutellaNets.
      * @return A HashMap of GnutellaNet objects.
      */
-    public HashMap getNets() {
+    public HashMap<String, GnutellaNet> getNets() {
         return nets;
     }
 
-    public HashMap getRateLimited() {
+    public HashMap<String, RemoteClient> getRateLimited() {
         return rateLimited;
     }
 
@@ -436,16 +434,16 @@ public class Data implements Serializable {
      * @param netName The Gnutella network name to find hosts in.
      * @return A collection of RemoteIP objects.
      */    
-    public synchronized Collection getHosts(String netName) {
+    public synchronized Collection<RemoteClient> getHosts(String netName) {
         GnutellaNet net = lookupNet(netName);
-        ArrayList res = new ArrayList(MAX_HOSTS_RETURNED);
-        HashMap map = net.getHosts();
-        ArrayList keys = new ArrayList(map.keySet());
+        ArrayList<RemoteClient> res = new ArrayList<RemoteClient>(MAX_HOSTS_RETURNED);
+        HashMap<String, RemoteClient> map = net.getHosts();
+        ArrayList<String> keys = new ArrayList<String>(map.keySet());
         Collections.shuffle(keys);
-        Iterator it = keys.iterator();
+        Iterator<String> it = keys.iterator();
         int n = 0;
         while (it.hasNext() && n < MAX_HOSTS_RETURNED) {
-            String key = (String)it.next();
+            String key = it.next();
             res.add(map.get(key));
             n++;
         }
@@ -458,17 +456,17 @@ public class Data implements Serializable {
      * @param protoVersion The cache protocol version needed.
      * @return A Collection of RemoteURL objects.
      */
-    public synchronized Collection getURLs(String netName, int protoVersion) {
+    public synchronized Collection<RemoteURL> getURLs(String netName, int protoVersion) {
         GnutellaNet net = lookupNet(netName);
-        ArrayList res = new ArrayList(MAX_URLS_RETURNED);
-        HashMap map = net.getURLs();
-        ArrayList keys = new ArrayList(map.keySet());
+        ArrayList<RemoteURL> res = new ArrayList<RemoteURL>(MAX_URLS_RETURNED);
+        HashMap<String, RemoteURL> map = net.getURLs();
+        ArrayList<String> keys = new ArrayList<String>(map.keySet());
         Collections.shuffle(keys);
-        Iterator it = keys.iterator();
+        Iterator<String> it = keys.iterator();
         int n = 0;
         while (it.hasNext() && n < MAX_URLS_RETURNED) {
-            String key = (String)it.next();
-            RemoteURL url = (RemoteURL)map.get(key);
+            String key = it.next();
+            RemoteURL url = map.get(key);
             if (url.getProtoVersion() != protoVersion)
                 continue;
             String cacheVersion = url.getCacheVersion();
@@ -496,7 +494,7 @@ public class Data implements Serializable {
                                     new FileInputStream(dataFile(context)));
             newData = (Data)i.readObject();
             i.close();
-            newData.verifyList = new LinkedList();
+            newData.verifyList = new LinkedList<VerifyURL>();
         } catch (FileNotFoundException e) {
             context.log("GWebCache: no data file");
         } catch (Exception e) {
@@ -506,15 +504,15 @@ public class Data implements Serializable {
             newData = new Data();
         instance = newData;
         synchronized (instance) {
-            Iterator it = instance.nets.keySet().iterator();
+            Iterator<String> it = instance.nets.keySet().iterator();
             while (it.hasNext()) {
-                String netName = (String)it.next();
-                GnutellaNet net = (GnutellaNet)instance.nets.get(netName);
-                HashMap map = net.getURLs();
-                Iterator it1 = map.keySet().iterator();
+                String netName = it.next();
+                GnutellaNet net = instance.nets.get(netName);
+                HashMap<String, RemoteURL> map = net.getURLs();
+                Iterator<String> it1 = map.keySet().iterator();
                 while (it1.hasNext()) {
-                    String url = (String)it1.next();
-                    RemoteURL u = (RemoteURL)map.get(url);
+                    String url = it1.next();
+                    RemoteURL u = map.get(url);
                     String cv = u.getCacheVersion();
                     if (cv.equals(RemoteURL.STATE_QUEUED))
                         instance.addUrlForVerification(netName, u);

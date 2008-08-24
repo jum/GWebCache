@@ -24,28 +24,28 @@ public class GnutellaNet implements Serializable {
      * Map from a String IP address to a RemoteClient object.
      * @see RemoteClient
      */
-    private HashMap hosts;
+    private HashMap<String, RemoteClient> hosts;
     /**
      * Map from a String URL to a RemoteURL object.
      * @see RemoteURL
      */
-    private HashMap urls;
+    private HashMap<String, RemoteURL> urls;
 
     public GnutellaNet(String netName) {
         this.netName = netName;
-        hosts = new HashMap();
-        urls = new HashMap();
+        hosts = new HashMap<String, RemoteClient>();
+        urls = new HashMap<String, RemoteURL>();
     }
 
     public String getNetName() {
         return netName;
     }
 
-    public HashMap getHosts() {
+    public HashMap<String, RemoteClient> getHosts() {
         return hosts;
     }
 
-    public HashMap getURLs() {
+    public HashMap<String, RemoteURL> getURLs() {
         return urls;
     }
 
